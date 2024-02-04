@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:bloc/bloc.dart';
 import 'package:blogpost/feautures/auth/domain/interactor/auth_interactor.dart';
 import 'package:get_it/get_it.dart';
@@ -12,33 +10,28 @@ class AuthCubit extends Cubit<AuthState> {
   final authInteractor = GetIt.instance.get<AuthInteractor>();
 
   AuthCubit() : super(AuthInitial()){
-    _init();
+    checkAuthorization();
   }
 
-  void _init() async {
-    //Future.delayed(Duration(seconds: 3));
+  void checkAuthorization() async {
     emit(await authInteractor.checkAuthorization() ? AuthAuthenticated() : AuthInitial());
   }
 
-  void signIn(String email, String password) async {
+  Future<void> signIn(String email, String password) async {
     emit(AuthLoading());
-    log("cubit:" + state.runtimeType.toString());
     try {
       bool isAuthenticated = await authInteractor.signIn(email, password);
       if(isAuthenticated){
         emit(AuthAuthenticated());
-        log("cubit:" + state.runtimeType.toString());
       } else {
         emit(AuthUnauthenticated());
-        log("cubit:" + state.runtimeType.toString());
       }
     } catch (e) {
       emit(AuthError(message: e.toString()));
-      log("cubit:" + state.runtimeType.toString());
     }
   }
 
-  void signUp(String email, String password) async {
+  Future<void> signUp(String email, String password) async {
     emit(AuthLoading());
     try {
       bool isAuthenticated = await authInteractor.signUp(email, password);
@@ -50,5 +43,10 @@ class AuthCubit extends Cubit<AuthState> {
     } catch (e) {
       emit(AuthError(message: e.toString()));
     }
+  }
+
+  Future<void> signOut() async {
+    await authInteractor.signOut();
+    emit(AuthAuthenticated());
   }
 }

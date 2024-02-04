@@ -39,6 +39,11 @@ class AuthInteractor {
     }
   }
 
+  Future<void> signOut() async {
+    await authService.signOut();
+    tokenManager.deleteToken();
+  }
+
   Future<bool> checkAuthorization() async {
     return tokenManager.hasToken();
   }

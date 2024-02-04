@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 class AuthSnackBars {
   static const loadingSnackBar = SnackBar(
+    duration: Duration(seconds: 1),
     backgroundColor: Colors.black,
     content: Row(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -23,6 +24,7 @@ class AuthSnackBars {
 
   static SnackBar errorSnackBar(String message){
     return SnackBar(
+      duration: Duration(seconds: 1),
     backgroundColor: Colors.black,
     content: Row(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -46,6 +48,7 @@ class AuthSnackBars {
   }
 
   static const unauthenticatedSnackBar = SnackBar(
+    duration: Duration(seconds: 1),
     backgroundColor: Colors.black,
     content: Row(
       mainAxisAlignment: MainAxisAlignment.center,

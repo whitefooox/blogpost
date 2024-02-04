@@ -4,6 +4,7 @@ import 'package:blogpost/core/resource/resource.dart';
 import 'package:blogpost/core/widget/bw_button.dart';
 import 'package:blogpost/feautures/auth/presentation/snackbar/auth_snackbar.dart';
 import 'package:blogpost/feautures/auth/presentation/state/cubit/auth_cubit.dart';
+import 'package:blogpost/feautures/auth/presentation/validation/auth_validator.dart';
 import 'package:blogpost/feautures/auth/presentation/widget/auth_input_field.dart';
 import 'package:blogpost/feautures/auth/presentation/widget/auth_text_link.dart';
 import 'package:flutter/material.dart';
@@ -17,14 +18,6 @@ class SignUpPage extends StatelessWidget {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _passwordConfirmController = TextEditingController();
-
-  bool _isEmailValid(String email) {
-    return RegExp(r'^[\w-\.]+@[a-zA-Z]+\.[a-zA-Z]{2,}$').hasMatch(email);
-  }
-
-  bool _isPasswordValid(String email) {
-    return RegExp(r'^.{8,}$').hasMatch(email);
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -40,8 +33,6 @@ class SignUpPage extends StatelessWidget {
         } else if (state is AuthError) {
           ScaffoldMessenger.of(context)
               .showSnackBar(AuthSnackBars.errorSnackBar(state.message));
-        } else if (state is AuthAuthenticated) {
-          Navigator.pushReplacementNamed(context, "/posts");
         } else if (state is AuthUnauthenticated) {
           ScaffoldMessenger.of(context)
               .showSnackBar(AuthSnackBars.unauthenticatedSnackBar);
@@ -82,7 +73,7 @@ class SignUpPage extends StatelessWidget {
                       validator: (value) {
                         if (value!.isEmpty) {
                           return 'Email is required';
-                        } else if (!_isEmailValid(value)) {
+                        } else if (!AuthValidator.isEmailValid(value)) {
                           return 'Enter a valid email address';
                         } else {
                           return null;
@@ -98,7 +89,7 @@ class SignUpPage extends StatelessWidget {
                       validator: (value) {
                         if (value!.isEmpty) {
                           return 'Password is required';
-                        } else if (!_isPasswordValid(value)) {
+                        } else if (!AuthValidator.isPasswordValid(value)) {
                           return 'Enter a valid password';
                         } else {
                           return null;
@@ -115,7 +106,7 @@ class SignUpPage extends StatelessWidget {
                       validator: (value) {
                         if (value!.isEmpty) {
                           return 'Password is required';
-                        } else if (!_isPasswordValid(value)) {
+                        } else if (!AuthValidator.isPasswordValid(value)) {
                           return 'Enter a valid password';
                         } else if (_passwordConfirmController.text !=
                             _passwordController.text) {

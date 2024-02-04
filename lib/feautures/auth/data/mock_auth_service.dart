@@ -1,7 +1,7 @@
 import 'package:blogpost/feautures/auth/domain/dependency/i_auth_service.dart';
 import 'package:blogpost/feautures/auth/domain/exception/auth_exception.dart';
 
-class RemoteAuthService implements IAuthService {
+class MockAuthService implements IAuthService {
   @override
   Future<String?> signIn(String email, String password) async {
     await Future.delayed(Duration(seconds: 3));
@@ -24,5 +24,10 @@ class RemoteAuthService implements IAuthService {
     } else {
       return null;
     }
+  }
+  
+  @override
+  Future<void> signOut() async {
+    //await Future.delayed(Duration(seconds: 3));
   }
 }

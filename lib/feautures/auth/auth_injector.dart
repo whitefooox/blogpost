@@ -1,4 +1,4 @@
-import 'package:blogpost/feautures/auth/data/remote_auth_service.dart';
+import 'package:blogpost/feautures/auth/data/mock_auth_service.dart';
 import 'package:blogpost/feautures/auth/data/token_manager.dart';
 import 'package:blogpost/feautures/auth/domain/dependency/i_auth_service.dart';
 import 'package:blogpost/feautures/auth/domain/dependency/i_token_manager.dart';
@@ -10,7 +10,7 @@ class AuthInjector {
 
   void inject(){
     final tokenManager = getIt.registerSingleton<ITokenManager>(TokenManager());
-    final authService = getIt.registerSingleton<IAuthService>(RemoteAuthService());
+    final authService = getIt.registerSingleton<IAuthService>(MockAuthService());
     getIt.registerSingleton<AuthInteractor>(AuthInteractor(tokenManager: tokenManager, authService: authService));
   }
 }

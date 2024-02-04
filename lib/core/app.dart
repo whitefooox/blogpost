@@ -1,26 +1,63 @@
-import 'package:blogpost/core/navigation/app_router.dart';
-import 'package:blogpost/feautures/auth/presentation/state/cubit/auth_cubit.dart';
-import 'package:blogpost/feautures/entry/presentation/page/create_pincode_page.dart';
-import 'package:blogpost/feautures/auth/presentation/page/signin_page.dart';
-import 'package:blogpost/feautures/auth/presentation/page/signup_page.dart';
-import 'package:blogpost/feautures/post/presentation/page/test_post_page.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'dart:developer';
 
-class App extends StatelessWidget {
+import 'package:blogpost/core/navigation/app_router.dart';
+import 'package:flutter/material.dart';
+
+class App extends StatefulWidget {
   const App({super.key});
 
   @override
+  State<App> createState() => _AppState();
+}
+
+class _AppState extends State<App> {
+  late final AppLifecycleListener _listener;
+
+  @override
+  void initState() {
+    super.initState();
+    _listener = AppLifecycleListener(
+      onStateChange: _onStateChanged,
+    );
+  }
+
+  @override
+  void dispose() {
+    _listener.dispose();
+    super.dispose();
+  }
+
+  void _onStateChanged(AppLifecycleState state) {
+    switch (state) {
+      case AppLifecycleState.detached:
+        _onDetached();
+      case AppLifecycleState.resumed:
+        _onResumed();
+      case AppLifecycleState.inactive:
+        _onInactive();
+      case AppLifecycleState.hidden:
+        _onHidden();
+      case AppLifecycleState.paused:
+        _onPaused();
+    }
+  }
+
+  void _onDetached() => log('detached');
+
+  void _onResumed() => log('resumed');
+
+  void _onInactive() => log('inactive');
+
+  void _onHidden() => log('hidden');
+
+  void _onPaused() => log('paused');
+
+  @override
   Widget build(BuildContext context) {
-    return MultiBlocProvider(
-      providers: [
-        BlocProvider(create: (context) => AuthCubit())
-      ],
-      child: MaterialApp(
-        initialRoute: AppRouter.initialRoute,
-        routes: AppRouter.routes,
-        debugShowCheckedModeBanner: false
-      ),
+    return const MaterialApp(
+      initialRoute: AppRouter.initialRoute,
+      onGenerateRoute: AppRouter.onGenerateRoute,
+      debugShowCheckedModeBanner: false
     );
   }
 }
