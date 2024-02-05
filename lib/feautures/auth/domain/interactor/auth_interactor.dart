@@ -44,7 +44,7 @@ class AuthInteractor {
     tokenManager.deleteToken();
   }
 
-  Future<bool> checkAuthorization() async {
+  bool checkAuthorization() {
     return tokenManager.hasToken();
   }
 }

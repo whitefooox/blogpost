@@ -1,39 +1,40 @@
 import 'package:blogpost/feautures/auth/presentation/page/signin_page.dart';
 import 'package:blogpost/feautures/auth/presentation/page/signup_page.dart';
-import 'package:blogpost/feautures/auth/presentation/state/cubit/auth_cubit.dart';
+import 'package:blogpost/feautures/auth/presentation/state/bloc/auth_bloc.dart';
 import 'package:blogpost/feautures/entry/presentation/page/create_lock_page.dart';
 import 'package:blogpost/feautures/post/presentation/page/test_post_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class AppRouter {
-  static const initialRoute = "/entry";
-  static final _authCubit = AuthCubit();
+  static const initialRoute = "/";
+  static final _authBloc = AuthBloc()..add(AuthAppLoadedEvent());
 
   static Route? onGenerateRoute(RouteSettings settings) {
     switch (settings.name) {
       case "/":
         return MaterialPageRoute(
             builder: (_) => BlocProvider.value(
-                  value: _authCubit,
-                  child: BlocListener<AuthCubit, AuthState>(
-                    bloc: _authCubit,
-                    listener: (context, state) {
-                      if(state is AuthAuthenticated){
-                        Navigator.pushReplacementNamed(context, "/posts");
+                  value: _authBloc,
+                  child: BlocBuilder<AuthBloc, AuthState>(
+                    bloc: _authBloc,
+                    builder: (context, state) {
+                      if(state.authGlobalStatus == AuthGlobalStatus.authorized){
+                        return TestPostPage();
+                      } else {
+                        return SignInPage();
                       }
                     },
-                    child: SignInPage(),
                   ),
                 ));
       case "/signin":
         return MaterialPageRoute(
             builder: (_) => BlocProvider.value(
-                  value: _authCubit,
-                  child: BlocListener<AuthCubit, AuthState>(
-                    bloc: _authCubit,
+                  value: _authBloc,
+                  child: BlocListener<AuthBloc, AuthState>(
+                    bloc: _authBloc,
                     listener: (context, state) {
-                      if(state is AuthAuthenticated){
+                      if(state.authGlobalStatus == AuthGlobalStatus.authorized){
                         Navigator.pushReplacementNamed(context, "/posts");
                       }
                     },
@@ -44,11 +45,11 @@ class AppRouter {
         {
           return MaterialPageRoute(
             builder: (_) => BlocProvider.value(
-                  value: _authCubit,
-                  child: BlocListener<AuthCubit, AuthState>(
-                    bloc: _authCubit,
+                  value: _authBloc,
+                  child: BlocListener<AuthBloc, AuthState>(
+                    bloc: _authBloc,
                     listener: (context, state) {
-                      if(state is AuthAuthenticated){
+                      if(state.authGlobalStatus == AuthGlobalStatus.authorized){
                         Navigator.pushReplacementNamed(context, "/posts");
                       }
                     },
@@ -60,7 +61,7 @@ class AppRouter {
         {
           return MaterialPageRoute(
               builder: (_) => BlocProvider.value(
-                    value: _authCubit,
+                    value: _authBloc,
                     child: const TestPostPage(),
                   ));
         }

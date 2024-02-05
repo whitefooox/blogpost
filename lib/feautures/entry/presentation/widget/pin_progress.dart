@@ -17,9 +17,9 @@ class PinProgress extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: List.generate(pinLenght, (index) {
         return Container(
-          margin: const EdgeInsets.all(10),
-          width: 20,
-          height: 20,
+          margin: const EdgeInsets.only(left: 10, right: 10),
+          width: 10,
+          height: 10,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
             color: (index + 1 <= currentCount) ? Colors.black : Color.fromARGB(255, 205, 205, 205)

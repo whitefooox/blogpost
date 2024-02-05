@@ -1,4 +1,4 @@
-import 'package:blogpost/feautures/auth/presentation/state/cubit/auth_cubit.dart';
+import 'package:blogpost/feautures/auth/presentation/state/bloc/auth_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -7,10 +7,10 @@ class TestPostPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final authCubit = BlocProvider.of<AuthCubit>(context);
+    final authBloc = BlocProvider.of<AuthBloc>(context);
 
-    return BlocBuilder<AuthCubit, AuthState>(
-      bloc: authCubit,
+    return BlocBuilder<AuthBloc, AuthState>(
+      bloc: authBloc,
       builder: (context, state) {
         return Scaffold(
           body: Center(
@@ -18,11 +18,11 @@ class TestPostPage extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  "Main page!${authCubit.state.runtimeType}",
+                  "Main page!${state.authGlobalStatus == AuthGlobalStatus.authorized}",
                   style: const TextStyle(fontSize: 20),
                 ),
                 ElevatedButton(onPressed: () async {
-                  await authCubit.signOut();
+                  authBloc.add(AuthSignOutEvent());
                   Navigator.pushReplacementNamed(context, "/");
                 }, child: Text("Exit"))
               ],

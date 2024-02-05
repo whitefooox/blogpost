@@ -1,37 +1,34 @@
 import 'package:flutter/material.dart';
 
-class BwButton extends StatelessWidget {
+class BwIconButton extends StatelessWidget {
 
   final void Function() onPressed;
-  final String text;
   final bool isEnabled;
   final OutlinedBorder shape;
-  final double fontSize;
+  final IconData iconData;
+  final double iconSize;
 
-  const BwButton({
+  const BwIconButton({
     super.key, 
     required this.onPressed,
-    required this.text,
     this.isEnabled = true,
     this.shape = const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(5)), side: BorderSide(color: Colors.black)),
-    this.fontSize = 16
+    required this.iconData,
+    this.iconSize = 30
   });
 
   @override
   Widget build(BuildContext context) {
-    return ElevatedButton(
+    return IconButton(
+      icon: Icon(
+        iconData,
+        size: iconSize,
+      ),
       onPressed: isEnabled ? onPressed : null,
       style: OutlinedButton.styleFrom(
         elevation: 0,
         backgroundColor: isEnabled ? Colors.white : Colors.black,
         shape: shape,
-      ),
-      child: Text(
-        text,
-        style: TextStyle(
-          fontSize: fontSize,
-          color: isEnabled ? Colors.black : Colors.white
-        ),
       ),
     );
   }

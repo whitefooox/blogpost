@@ -1,5 +1,5 @@
 abstract class ITokenManager {
-  Future<bool> hasToken();
+  bool hasToken();
   void saveToken(String token);
   void deleteToken();
 }

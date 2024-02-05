@@ -3,7 +3,7 @@ import 'dart:developer';
 import 'package:blogpost/core/resource/resource.dart';
 import 'package:blogpost/core/widget/bw_button.dart';
 import 'package:blogpost/feautures/auth/presentation/snackbar/auth_snackbar.dart';
-import 'package:blogpost/feautures/auth/presentation/state/cubit/auth_cubit.dart';
+import 'package:blogpost/feautures/auth/presentation/state/bloc/auth_bloc.dart';
 import 'package:blogpost/feautures/auth/presentation/validation/auth_validator.dart';
 import 'package:blogpost/feautures/auth/presentation/widget/auth_input_field.dart';
 import 'package:blogpost/feautures/auth/presentation/widget/auth_text_link.dart';
@@ -22,18 +22,18 @@ class SignUpPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    final authCubit = BlocProvider.of<AuthCubit>(context);
+    final authBloc = BlocProvider.of<AuthBloc>(context);
 
-    return BlocListener<AuthCubit, AuthState>(
-      bloc: authCubit,
+    return BlocListener<AuthBloc, AuthState>(
+      bloc: authBloc,
       listener: (context, state) {
-        if (state is AuthLoading) {
+        if (state.authProcessStatus == AuthProcessStatus.loading) {
           ScaffoldMessenger.of(context)
               .showSnackBar(AuthSnackBars.loadingSnackBar);
-        } else if (state is AuthError) {
+        } else if (state.authProcessStatus == AuthProcessStatus.failure) {
           ScaffoldMessenger.of(context)
-              .showSnackBar(AuthSnackBars.errorSnackBar(state.message));
-        } else if (state is AuthUnauthenticated) {
+              .showSnackBar(AuthSnackBars.errorSnackBar(state.errorMessage!));
+        } else if (state.authProcessStatus == AuthProcessStatus.unauthorized) {
           ScaffoldMessenger.of(context)
               .showSnackBar(AuthSnackBars.unauthenticatedSnackBar);
         }
@@ -122,20 +122,22 @@ class SignUpPage extends StatelessWidget {
                     ),
                     SizedBox(
                         height: 60,
-                        child: BlocBuilder<AuthCubit, AuthState>(
-                          bloc: authCubit,
+                        child: BlocBuilder<AuthBloc, AuthState>(
+                          bloc: authBloc,
                           builder: (context, state) {
                             return BwButton(
                               onPressed: () {
                                 FocusManager.instance.primaryFocus?.unfocus();
                                 log(state.runtimeType.toString());
                                 if (_formKey.currentState!.validate()) {
-                                  authCubit.signUp(_emailController.text,
-                                    _passwordController.text);
+                                  authBloc.add(AuthSignUpEvent(
+                                    email: _emailController.text, 
+                                    password: _passwordController.text
+                                  ));
                                 }
                                 
                               },
-                              isEnabled: state is! AuthLoading,
+                              isEnabled: state.authProcessStatus != AuthProcessStatus.loading,
                               text: "Sign up",
                             );
                           },
