@@ -1,4 +1,4 @@
-import 'package:blogpost/feautures/auth/domain/dependency/i_token_manager.dart';
+import 'package:blogpost/module/auth/domain/dependency/i_token_manager.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class TokenManager implements ITokenManager {

@@ -1,16 +1,16 @@
-import 'package:blogpost/feautures/auth/presentation/page/signin_page.dart';
-import 'package:blogpost/feautures/auth/presentation/page/signup_page.dart';
-import 'package:blogpost/feautures/auth/presentation/state/bloc/auth_bloc.dart';
-import 'package:blogpost/feautures/entry/presentation/page/create_lock_page.dart';
-import 'package:blogpost/feautures/post/presentation/page/test_post_page.dart';
+import 'package:blogpost/module/auth/presentation/page/signin_page.dart';
+import 'package:blogpost/module/auth/presentation/page/signup_page.dart';
+import 'package:blogpost/module/auth/presentation/state/bloc/auth_bloc.dart';
+import 'package:blogpost/module/entry/presentation/page/create_lock_page.dart';
+import 'package:blogpost/module/post/presentation/page/test_post_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class AppRouter {
-  static const initialRoute = "/";
-  static final _authBloc = AuthBloc()..add(AuthAppLoadedEvent());
+  final initialRoute = "/";
+  final _authBloc = AuthBloc()..add(AuthAppLoadedEvent());
 
-  static Route? onGenerateRoute(RouteSettings settings) {
+  Route? onGenerateRoute(RouteSettings settings) {
     switch (settings.name) {
       case "/":
         return MaterialPageRoute(

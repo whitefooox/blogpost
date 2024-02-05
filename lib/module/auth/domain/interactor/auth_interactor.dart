@@ -1,5 +1,5 @@
-import 'package:blogpost/feautures/auth/domain/dependency/i_token_manager.dart';
-import 'package:blogpost/feautures/auth/domain/dependency/i_auth_service.dart';
+import 'package:blogpost/module/auth/domain/dependency/i_token_manager.dart';
+import 'package:blogpost/module/auth/domain/dependency/i_auth_service.dart';
 
 class AuthInteractor {
 

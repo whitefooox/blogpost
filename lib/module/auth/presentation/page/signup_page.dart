@@ -2,21 +2,22 @@ import 'dart:developer';
 
 import 'package:blogpost/core/resource/resource.dart';
 import 'package:blogpost/core/widget/bw_button.dart';
-import 'package:blogpost/feautures/auth/presentation/snackbar/auth_snackbar.dart';
-import 'package:blogpost/feautures/auth/presentation/state/bloc/auth_bloc.dart';
-import 'package:blogpost/feautures/auth/presentation/validation/auth_validator.dart';
-import 'package:blogpost/feautures/auth/presentation/widget/auth_input_field.dart';
-import 'package:blogpost/feautures/auth/presentation/widget/auth_text_link.dart';
+import 'package:blogpost/module/auth/presentation/snackbar/auth_snackbar.dart';
+import 'package:blogpost/module/auth/presentation/state/bloc/auth_bloc.dart';
+import 'package:blogpost/module/auth/presentation/validation/auth_validator.dart';
+import 'package:blogpost/module/auth/presentation/widget/auth_input_field.dart';
+import 'package:blogpost/module/auth/presentation/widget/auth_text_link.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class SignInPage extends StatelessWidget {
-  SignInPage({super.key});
+class SignUpPage extends StatelessWidget {
+  SignUpPage({super.key});
 
   final _formKey = GlobalKey<FormState>();
 
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  final _passwordConfirmController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -99,28 +100,48 @@ class SignInPage extends StatelessWidget {
                     const SizedBox(
                       height: 10,
                     ),
-                    SizedBox(
-                      height: 60,
-                      child: BlocBuilder<AuthBloc, AuthState>(
-                        bloc: authBloc,
-                        builder: (_, state) {
-                          return BwButton(
-                            onPressed: () {
-                              FocusManager.instance.primaryFocus?.unfocus();
-                              log(state.runtimeType.toString());
-                              if (_formKey.currentState!.validate()) {
-                                authBloc.add(AuthSignInEvent(
-                                  email: _emailController.text, 
-                                  password: _passwordController.text
-                                ));
-                              }
-                            },
-                            isEnabled: state.authProcessStatus != AuthProcessStatus.loading,
-                            text: "Sign in",
-                          );
-                        },
-                      ),
+                    AuthInputField(
+                      labelText: 'Confirm password',
+                      textController: _passwordConfirmController,
+                      validator: (value) {
+                        if (value!.isEmpty) {
+                          return 'Password is required';
+                        } else if (!AuthValidator.isPasswordValid(value)) {
+                          return 'Enter a valid password';
+                        } else if (_passwordConfirmController.text !=
+                            _passwordController.text) {
+                          return 'Password doesn\'t match';
+                        } else {
+                          return null;
+                        }
+                      },
+                      isHidden: true,
                     ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    SizedBox(
+                        height: 60,
+                        child: BlocBuilder<AuthBloc, AuthState>(
+                          bloc: authBloc,
+                          builder: (context, state) {
+                            return BwButton(
+                              onPressed: () {
+                                FocusManager.instance.primaryFocus?.unfocus();
+                                log(state.runtimeType.toString());
+                                if (_formKey.currentState!.validate()) {
+                                  authBloc.add(AuthSignUpEvent(
+                                    email: _emailController.text, 
+                                    password: _passwordController.text
+                                  ));
+                                }
+                                
+                              },
+                              isEnabled: state.authProcessStatus != AuthProcessStatus.loading,
+                              text: "Sign up",
+                            );
+                          },
+                        )),
                     const SizedBox(
                       height: 10,
                     ),
@@ -131,13 +152,13 @@ class SignInPage extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             const Text(
-                              "No account?\t",
+                              "Do you have an account?\t",
                               style: TextStyle(fontSize: 14),
                             ),
                             AuthTextLink(
-                              text: "Sign up",
+                              text: "Sign in",
                               onTap: () {
-                                Navigator.pushReplacementNamed(context, "/signup");
+                                Navigator.pushReplacementNamed(context, "/signin");
                               },
                             )
                           ],

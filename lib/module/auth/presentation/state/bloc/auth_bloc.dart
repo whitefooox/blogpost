@@ -1,5 +1,5 @@
 import 'package:bloc/bloc.dart';
-import 'package:blogpost/feautures/auth/domain/interactor/auth_interactor.dart';
+import 'package:blogpost/module/auth/domain/interactor/auth_interactor.dart';
 import 'package:get_it/get_it.dart';
 import 'package:meta/meta.dart';
 

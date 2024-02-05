@@ -1,5 +1,5 @@
-import 'package:blogpost/feautures/auth/domain/dependency/i_auth_service.dart';
-import 'package:blogpost/feautures/auth/domain/exception/auth_exception.dart';
+import 'package:blogpost/module/auth/domain/dependency/i_auth_service.dart';
+import 'package:blogpost/module/auth/domain/exception/auth_exception.dart';
 
 class MockAuthService implements IAuthService {
   @override

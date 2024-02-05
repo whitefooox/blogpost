@@ -1,6 +1,6 @@
 import 'package:blogpost/core/widget/bw_button.dart';
 import 'package:blogpost/core/widget/bw_icon_button.dart';
-import 'package:blogpost/feautures/entry/presentation/widget/pin_progress.dart';
+import 'package:blogpost/module/entry/presentation/widget/pin_progress.dart';
 import 'package:flutter/material.dart';
 
 class CreateLockPage extends StatefulWidget {

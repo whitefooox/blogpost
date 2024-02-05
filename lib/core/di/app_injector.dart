@@ -1,8 +1,8 @@
-import 'package:blogpost/feautures/auth/data/mock_auth_service.dart';
-import 'package:blogpost/feautures/auth/data/token_manager.dart';
-import 'package:blogpost/feautures/auth/domain/dependency/i_auth_service.dart';
-import 'package:blogpost/feautures/auth/domain/dependency/i_token_manager.dart';
-import 'package:blogpost/feautures/auth/domain/interactor/auth_interactor.dart';
+import 'package:blogpost/module/auth/data/mock_auth_service.dart';
+import 'package:blogpost/module/auth/data/token_manager.dart';
+import 'package:blogpost/module/auth/domain/dependency/i_auth_service.dart';
+import 'package:blogpost/module/auth/domain/dependency/i_token_manager.dart';
+import 'package:blogpost/module/auth/domain/interactor/auth_interactor.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

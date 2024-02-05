@@ -12,6 +12,7 @@ class App extends StatefulWidget {
 
 class _AppState extends State<App> {
   late final AppLifecycleListener _listener;
+  final AppRouter _appRouter = AppRouter();
 
   @override
   void initState() {
@@ -54,9 +55,9 @@ class _AppState extends State<App> {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      initialRoute: AppRouter.initialRoute,
-      onGenerateRoute: AppRouter.onGenerateRoute,
+    return MaterialApp(
+      initialRoute: _appRouter.initialRoute,
+      onGenerateRoute: _appRouter.onGenerateRoute,
       debugShowCheckedModeBanner: false
     );
   }

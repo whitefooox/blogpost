@@ -1,4 +1,4 @@
-import 'package:blogpost/feautures/entry/domain/dependency/i_pin_repository.dart';
+import 'package:blogpost/module/entry/domain/dependency/i_pin_repository.dart';
 
 class PinInteractor {
 
