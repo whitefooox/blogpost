@@ -22,12 +22,11 @@ class PinProgress extends StatelessWidget {
           height: 10,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            color: (index + 1 <= currentCount) ? Colors.black : Color.fromARGB(255, 205, 205, 205)
+            color: (index + 1 <= currentCount) ? Colors.black : const Color.fromARGB(255, 205, 205, 205)
             //border: Border.all(color: Colors.black, width: 2)
           ),
         );
       })
     );
   }
-
 }

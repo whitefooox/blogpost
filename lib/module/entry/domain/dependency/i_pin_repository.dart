@@ -1,5 +1,6 @@
 abstract class IPinRepository {
+  bool hasPin();
   void savePin(String pin);
   void deletePin();
-  Future<String?> getPin();
+  String? getPin();
 }

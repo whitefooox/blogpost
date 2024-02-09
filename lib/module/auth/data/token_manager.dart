@@ -3,25 +3,23 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class TokenManager implements ITokenManager {
 
-  final SharedPreferences prefs;
+  final SharedPreferences _prefs;
   String tokenKey = "token";
 
-  TokenManager({
-    required this.prefs
-  });
+  TokenManager(this._prefs);
   
   @override
   bool hasToken() {
-    return prefs.containsKey(tokenKey);
+    return _prefs.containsKey(tokenKey);
   }
   
   @override
   void deleteToken() async {
-    await prefs.remove(tokenKey);
+    await _prefs.remove(tokenKey);
   }
   
   @override
   void saveToken(String token) async {
-    await prefs.setString(tokenKey, token);
+    await _prefs.setString(tokenKey, token);
   }
 }

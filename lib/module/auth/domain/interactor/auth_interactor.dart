@@ -3,19 +3,16 @@ import 'package:blogpost/module/auth/domain/dependency/i_auth_service.dart';
 
 class AuthInteractor {
 
-  final ITokenManager tokenManager;
-  final IAuthService authService;
+  final ITokenManager _tokenManager;
+  final IAuthService _authService;
 
-  const AuthInteractor({
-    required this.tokenManager,
-    required this.authService
-  });
+  const AuthInteractor(this._tokenManager, this._authService);
 
   Future<bool> signIn(String email, String password) async {
     try {
-      final token = await authService.signIn(email, password);
+      final token = await _authService.signIn(email, password);
       if(token != null){
-        tokenManager.saveToken(token);
+        _tokenManager.saveToken(token);
         return true;
       } else {
         return false;
@@ -27,9 +24,9 @@ class AuthInteractor {
 
   Future<bool> signUp(String email, String password) async {
     try {
-      final token = await authService.signUp(email, password);
+      final token = await _authService.signUp(email, password);
       if(token != null){
-        tokenManager.saveToken(token);
+        _tokenManager.saveToken(token);
         return true;
       } else {
         return false;
@@ -40,11 +37,11 @@ class AuthInteractor {
   }
 
   Future<void> signOut() async {
-    await authService.signOut();
-    tokenManager.deleteToken();
+    await _authService.signOut();
+    _tokenManager.deleteToken();
   }
 
   bool checkAuthorization() {
-    return tokenManager.hasToken();
+    return _tokenManager.hasToken();
   }
 }

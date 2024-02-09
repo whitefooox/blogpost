@@ -24,5 +24,4 @@ class AuthTextLink extends StatelessWidget {
       ),
     );
   }
-
 }

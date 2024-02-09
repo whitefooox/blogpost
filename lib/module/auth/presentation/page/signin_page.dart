@@ -35,12 +35,13 @@ class SignInPage extends StatelessWidget {
         } else if (state.authProcessStatus == AuthProcessStatus.unauthorized) {
           ScaffoldMessenger.of(context)
               .showSnackBar(AuthSnackBars.unauthenticatedSnackBar);
+        } else if(state.authProcessStatus == AuthProcessStatus.authorized) {
+          Navigator.pushReplacementNamed(context, "/create_lock");
         }
       },
       child: Scaffold(
           backgroundColor: Colors.white,
-          body: SafeArea(
-              child: Center(
+          body: Center(
             child: Padding(
               padding: const EdgeInsets.only(left: 25, right: 25),
               child: Form(
@@ -159,7 +160,6 @@ class SignInPage extends StatelessWidget {
                   ],
                 ),
               ),
-            ),
           ))),
     );
   }

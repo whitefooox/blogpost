@@ -23,6 +23,7 @@ class BwIconButton extends StatelessWidget {
       icon: Icon(
         iconData,
         size: iconSize,
+        color: isEnabled ? Colors.black : Colors.white,
       ),
       onPressed: isEnabled ? onPressed : null,
       style: OutlinedButton.styleFrom(
