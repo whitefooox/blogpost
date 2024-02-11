@@ -15,6 +15,16 @@ class AppLockBloc extends Bloc<AppLockEvent, AppLockState> {
     on<AppLockEnablePinEvent>(_enablePin);
     on<AppLockActivateLockEvent>(_activateLock);
     on<AppLockUnlockWithPinEvent>(_pinUnlock);
+    on<AppLockResetSettingsEvent>(_resetSettings);
+  }
+
+  void _resetSettings(
+    AppLockResetSettingsEvent event,
+    Emitter<AppLockState> emit
+  ){
+    lockInteractor.disablePin();
+    lockInteractor.disableFingerprint();
+    emit(state.copyWith(useFingerprint: false, usePin: false));
   }
 
   void _pinUnlock(

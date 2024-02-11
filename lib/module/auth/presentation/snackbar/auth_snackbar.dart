@@ -24,7 +24,7 @@ class AuthSnackBars {
 
   static SnackBar errorSnackBar(String message){
     return SnackBar(
-      duration: Duration(seconds: 1),
+      duration: const Duration(seconds: 1),
     backgroundColor: Colors.black,
     content: Row(
       mainAxisAlignment: MainAxisAlignment.center,

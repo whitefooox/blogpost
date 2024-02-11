@@ -1,9 +1,7 @@
 import 'package:blogpost/core/widget/bw_icon_button.dart';
 import 'package:blogpost/module/auth/presentation/state/bloc/auth_bloc.dart';
-import 'package:blogpost/module/post/domain/entity/post.dart';
-import 'package:blogpost/module/post/presentation/state/bloc/posts_bloc.dart';
+import 'package:blogpost/module/post/presentation/state/posts/posts_bloc.dart';
 import 'package:blogpost/module/post/presentation/widget/bw_tab_bar.dart';
-import 'package:blogpost/module/post/presentation/widget/post_tile.dart';
 import 'package:blogpost/module/post/presentation/widget/posts_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -20,8 +18,9 @@ class _BlogPostPageState extends State<BlogPostPage>
   @override
   Widget build(BuildContext context) {
     final authBloc = BlocProvider.of<AuthBloc>(context);
+    final postsBloc = BlocProvider.of<PostsBloc>(context);
     final isAuthorized =
-        authBloc.state.authGlobalStatus == AuthGlobalStatus.authorized;
+        authBloc.state is AuthAuthorizedState;
 
     final tabController =
         TabController(length: isAuthorized ? 2 : 1, vsync: this);
@@ -29,25 +28,32 @@ class _BlogPostPageState extends State<BlogPostPage>
     return Scaffold(
       floatingActionButton: isAuthorized
           ? BwIconButton(
-              isEnabled: false,
               iconData: Icons.add,
-              onPressed: () {},
+              onPressed: () {
+                Navigator.pushNamed(context, "/edit_post");
+              },
             )
           : null,
       appBar: AppBar(
         title: const Text("BlogPost"),
-        actions: [
+        actions: isAuthorized ?[
           IconButton(
-            onPressed: () {},
+            onPressed: () {
+              Navigator.pushNamed(context, "/settings");
+            },
             icon: const Icon(Icons.settings),
           ),
-        ],
+        ] : null,
       ),
       body: Padding(
         padding: const EdgeInsets.only(left: 15, right: 15),
-        child: Column(
+        child: 
+        Column(
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.start,
           children: [
             const SearchBar(
+              elevation: MaterialStatePropertyAll(0),
               hintText: "Type post name",
               backgroundColor: MaterialStatePropertyAll(Colors.white),
               shape: MaterialStatePropertyAll(RoundedRectangleBorder(
@@ -65,29 +71,106 @@ class _BlogPostPageState extends State<BlogPostPage>
             const SizedBox(
               height: 10,
             ),
-            BlocBuilder<PostsBloc, PostsState>(
-              builder: (context, state) {
-                if(state is PostsLoading){
-                  return  CircularProgressIndicator();
-                } else if(state is PostsLoaded){
-                  return Expanded(
-                  child: TabBarView(
-                      controller: tabController,
-                      children: isAuthorized ? [
-                        PostsList(posts: state.posts),
-                        PostsList(posts: state.posts)
-                      ] : [
-                        PostsList(posts: state.posts)
-                      ]),
-                );
-                } else {
-                  return Placeholder();
-                }
-              },
+            Expanded(
+              child: TabBarView(
+                controller: tabController,
+                  children: [
+                    RefreshIndicator(
+                      onRefresh: () async {
+                        postsBloc.add(PostsFetchEvent());
+                      },
+                      child: SingleChildScrollView(
+                        child: BlocBuilder<PostsBloc, PostsState>(
+                          bloc: postsBloc,
+                          builder: (context, state){
+                            if(state is PostsLoading){
+                              return const Center(
+                                child: CircularProgressIndicator()
+                              );
+                            } else if(state is PostsLoaded){
+                              return PostsList(posts: state.posts);
+                            } else {
+                              return const Placeholder();
+                            }
+                          }
+                        ),
+                      )
+                    ),
+                    RefreshIndicator(
+                      onRefresh: () async {
+                        postsBloc.add(PostsFetchEvent());
+                      },
+                      child: SingleChildScrollView(
+                        child: BlocBuilder<PostsBloc, PostsState>(
+                          bloc: postsBloc,
+                          builder: (context, state){
+                            if(state is PostsLoading){
+                              return const Center(
+                                child: CircularProgressIndicator()
+                              );
+                            } else if(state is PostsLoaded){
+                              return PostsList(posts: state.posts);
+                            } else {
+                              return const Placeholder();
+                            }
+                          }
+                        ),
+                      )
+                    ),
+                  ]
+              ),
+            )
+            /*
+            RefreshIndicator(
+              onRefresh: () async {},
+              child: BlocBuilder<PostsBloc, PostsState>(
+                builder: (context, state) {
+                  if(state is PostsLoading){
+                    return  const Expanded(
+                      child: Center(
+                        child: CircularProgressIndicator()
+                      )
+                    );
+                  } else if(state is PostsLoaded){
+                    return Expanded(
+                    child: TabBarView(
+                        controller: tabController,
+                        children: isAuthorized ? [
+                          PostsList(posts: state.posts),
+                          PostsList(posts: state.posts)
+                        ] : [
+                          PostsList(posts: state.posts)
+                        ]),
+                  );
+                  } else if(state is PostsError){
+                    return Expanded(
+                      child: Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Icon(
+                              Icons.error_outline_sharp,
+                              color: Colors.red,
+                              size: 50,
+                            ),
+                            const SizedBox(height: 5,),
+                            Text(
+                              state.message,
+                              style: const TextStyle(
+                                fontSize: 20
+                              ),
+                            ),
+                          ],
+                        )
+                      )
+                    );
+                  } else {
+                    return Placeholder();
+                  }
+                },
+              ),
             ),
-            const SizedBox(
-              height: 10,
-            ),
+            */
           ],
         ),
       ),

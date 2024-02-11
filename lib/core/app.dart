@@ -1,7 +1,4 @@
-import 'dart:developer';
-
 import 'package:blogpost/core/navigation/app_router.dart';
-import 'package:blogpost/module/entry/presentation/page/app_lock.dart';
 import 'package:flutter/material.dart';
 
 class App extends StatelessWidget {

@@ -22,9 +22,12 @@ class BWTabBar extends StatelessWidget {
             width: double.infinity,
             decoration: BoxDecoration(
                 border: Border.all(color: Colors.black),
-                borderRadius: const BorderRadius.only(
-                topRight: Radius.circular(5),
-                bottomRight: Radius.circular(5))),
+                borderRadius: BorderRadius.only(
+                topRight: ((index + 1) == options.length) ? const Radius.circular(5) : Radius.zero,
+                bottomRight: ((index + 1) == options.length) ? const Radius.circular(5) : Radius.zero,
+                topLeft: (index == 0) ? const Radius.circular(5) : Radius.zero,
+                bottomLeft: (index == 0) ? const Radius.circular(5) : Radius.zero,
+            )),
             child: Tab(
               child: Text(options[index]),
             ),

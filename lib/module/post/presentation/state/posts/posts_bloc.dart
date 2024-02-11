@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:bloc/bloc.dart';
 import 'package:blogpost/module/post/domain/entity/post.dart';
 import 'package:blogpost/module/post/domain/interactor/post_interactor.dart';
@@ -25,7 +27,8 @@ class PostsBloc extends Bloc<PostsEvent, PostsState> {
       posts.sort((a, b) => b.date.compareTo(a.date));
       emit(PostsLoaded(posts));
     } catch (e) {
-      emit(PostsError("error in posts"));
+      log("error in bloc");
+      emit(PostsError(e.toString()));
     }
     /*
     postInteractor.getAllPosts().then((posts) async {

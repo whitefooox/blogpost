@@ -20,7 +20,12 @@ class PostsList extends StatelessWidget {
         shrinkWrap: true,
         itemCount: posts.length,
         itemBuilder: (context, index) {
-          return PostTile(post: posts[index]);
+          return GestureDetector(
+            onTap: (){
+              Navigator.pushNamed(context, "/post", arguments: posts[index].id);
+            },
+            child: PostTile(post: posts[index])
+          );
         },
         separatorBuilder: (context, index) {
           return const SizedBox(

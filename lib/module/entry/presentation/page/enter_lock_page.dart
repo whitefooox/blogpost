@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:blogpost/module/entry/domain/interactor/lock_interactor.dart';
 import 'package:blogpost/module/entry/presentation/widget/lock_keyboard.dart';
 import 'package:blogpost/module/entry/presentation/widget/pin_progress.dart';
@@ -20,6 +18,20 @@ class _EnterLockPageState extends State<EnterLockPage> {
   final pinMaxLength = 4;
   var pin = '';
 
+  @override
+  void initState() {
+    super.initState();
+    if(lockInteractor.hasFingerprint()){
+      authenticateWithFingerprint();
+    }
+  }
+
+  void authenticateWithFingerprint() async {
+    if(await lockInteractor.authenticateWithFingerprint()){
+      if(context.mounted) Navigator.pushReplacementNamed(context, "/posts");
+    }
+  }
+
   void enterNumber(int number){
     setState(() {
       if (pin.length < pinMaxLength) {
@@ -34,7 +46,6 @@ class _EnterLockPageState extends State<EnterLockPage> {
           pin = '';
         });
       }
-      //Navigator.pushReplacementNamed(context, "/posts");
     }
   }
 
@@ -69,11 +80,7 @@ class _EnterLockPageState extends State<EnterLockPage> {
               LockKeyboard(
                 onNumberTap: enterNumber, 
                 onBackspaceTap: deleteLastNumber,
-                onFingerprintTap: (lockInteractor.hasFingerprint()) ? () async {
-                  if(await lockInteractor.authenticateWithFingerprint()){
-                    Navigator.pushReplacementNamed(context, "/posts");
-                  }
-                } : null
+                onFingerprintTap: lockInteractor.hasFingerprint() ? authenticateWithFingerprint : null
               )
             ],
           ),

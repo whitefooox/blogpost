@@ -1,7 +1,5 @@
 import 'dart:async';
 import 'dart:developer';
-
-import 'package:blogpost/core/navigation/app_router.dart';
 import 'package:flutter/material.dart';
 
 class AppLock extends StatefulWidget {

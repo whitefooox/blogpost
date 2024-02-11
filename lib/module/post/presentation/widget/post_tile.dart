@@ -58,14 +58,14 @@ class PostTile extends StatelessWidget {
                   fit: BoxFit.fitWidth,
               ),
             ),
-            const SizedBox(height: 5,),
+            const SizedBox(height: 10,),
             Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 Row(
                   children: [
-                    const Icon(
-                      Icons.favorite_border,
+                    Icon(
+                      post.isLiked ? Icons.thumb_up : Icons.thumb_up_outlined,
                       size: 25,
                     ),
                     const SizedBox(width: 5,),

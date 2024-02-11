@@ -27,16 +27,16 @@ class SignUpPage extends StatelessWidget {
     return BlocListener<AuthBloc, AuthState>(
       bloc: authBloc,
       listener: (context, state) {
-        if (state.authProcessStatus == AuthProcessStatus.loading) {
+        if (state is AuthLoadingState) {
           ScaffoldMessenger.of(context)
               .showSnackBar(AuthSnackBars.loadingSnackBar);
-        } else if (state.authProcessStatus == AuthProcessStatus.failure) {
+        } else if (state is AuthFailureState) {
           ScaffoldMessenger.of(context)
-              .showSnackBar(AuthSnackBars.errorSnackBar(state.errorMessage!));
-        } else if (state.authProcessStatus == AuthProcessStatus.unauthorized) {
+              .showSnackBar(AuthSnackBars.errorSnackBar(state.message));
+        } else if (state is AuthUnauthorizedState) {
           ScaffoldMessenger.of(context)
               .showSnackBar(AuthSnackBars.unauthenticatedSnackBar);
-        } if (state.authProcessStatus == AuthProcessStatus.authorized) {
+        } if (state is AuthAuthorizedState) {
           Navigator.pushReplacementNamed(context, "/create_lock");
         }
       },
@@ -138,7 +138,7 @@ class SignUpPage extends StatelessWidget {
                                 }
                                 
                               },
-                              isEnabled: state.authProcessStatus != AuthProcessStatus.loading,
+                              isEnabled: state is! AuthLoadingState,
                               text: "Sign up",
                             );
                           },

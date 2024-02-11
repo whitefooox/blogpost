@@ -10,7 +10,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
   final authInteractor = GetIt.instance.get<AuthInteractor>();
 
-  AuthBloc() : super(AuthState()) {
+  AuthBloc() : super(AuthInitialState()) {
 
     on<AuthAppLoadedEvent>(_appLoaded);
     on<AuthSignInEvent>(_signIn);
@@ -23,23 +23,30 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     Emitter<AuthState> emit
   ){
     final isAuthorized = authInteractor.checkAuthorization();
-    emit(state.copyWith(authGlobalStatus: isAuthorized ? AuthGlobalStatus.authorized : AuthGlobalStatus.unauthorized));
+    if(isAuthorized){
+      emit(AuthAuthorizedState());
+    }
+    //emit(state.copyWith(authGlobalStatus: isAuthorized ? AuthGlobalStatus.authorized : AuthGlobalStatus.unauthorized));
   }
 
   void _signIn(
     AuthSignInEvent event,
     Emitter<AuthState> emit
   ) async {
-    emit(state.copyWith(authProcessStatus: AuthProcessStatus.loading));
+    //emit(state.copyWith(authProcessStatus: AuthProcessStatus.loading));
+    emit(AuthLoadingState());
     try {
       bool isAuthenticated = await authInteractor.signIn(event.email, event.password);
       if(isAuthenticated){
-        emit(state.copyWith(authProcessStatus: AuthProcessStatus.authorized, authGlobalStatus: AuthGlobalStatus.authorized));
+        //emit(state.copyWith(authProcessStatus: AuthProcessStatus.authorized, authGlobalStatus: AuthGlobalStatus.authorized));
+        emit(AuthAuthorizedState());
       } else {
-        emit(state.copyWith(authProcessStatus: AuthProcessStatus.unauthorized));
+        //emit(state.copyWith(authProcessStatus: AuthProcessStatus.unauthorized));
+        emit(AuthUnauthorizedState());
       }
     } catch (e) {
-      emit(state.copyWith(authProcessStatus: AuthProcessStatus.failure, errorMessage: e.toString()));
+      //emit(state.copyWith(authProcessStatus: AuthProcessStatus.failure, errorMessage: e.toString()));
+      emit(AuthFailureState(e.toString()));
     }
   }
 
@@ -47,16 +54,20 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     AuthSignUpEvent event,
     Emitter<AuthState> emit
   ) async {
-    emit(state.copyWith(authProcessStatus: AuthProcessStatus.loading));
+    //emit(state.copyWith(authProcessStatus: AuthProcessStatus.loading));
+    emit(AuthLoadingState());
     try {
       bool isAuthenticated = await authInteractor.signUp(event.email, event.password);
       if(isAuthenticated){
-        emit(state.copyWith(authProcessStatus: AuthProcessStatus.authorized, authGlobalStatus: AuthGlobalStatus.authorized));
+        //emit(state.copyWith(authProcessStatus: AuthProcessStatus.authorized, authGlobalStatus: AuthGlobalStatus.authorized));
+        emit(AuthAuthorizedState());
       } else {
-        emit(state.copyWith(authProcessStatus: AuthProcessStatus.unauthorized));
+        //emit(state.copyWith(authProcessStatus: AuthProcessStatus.unauthorized));
+        emit(AuthUnauthorizedState());
       }
     } catch (e) {
-      emit(state.copyWith(authProcessStatus: AuthProcessStatus.failure, errorMessage: e.toString()));
+      emit(AuthFailureState(e.toString()));
+      //emit(state.copyWith(authProcessStatus: AuthProcessStatus.failure, errorMessage: e.toString()));
     }
   }
 
@@ -65,6 +76,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     Emitter<AuthState> emit
   ) async {
     await authInteractor.signOut();
-    emit(state.copyWith(authGlobalStatus: AuthGlobalStatus.unauthorized, authProcessStatus: AuthProcessStatus.initial));
+    emit(AuthInitialState());
+    //emit(state.copyWith(authGlobalStatus: AuthGlobalStatus.unauthorized, authProcessStatus: AuthProcessStatus.initial));
   }
 }

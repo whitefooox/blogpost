@@ -15,7 +15,7 @@ import 'package:blogpost/module/entry/presentation/state/bloc/app_lock_bloc.dart
 import 'package:blogpost/module/post/data/mock_post_repository.dart';
 import 'package:blogpost/module/post/domain/dependency/i_post_repository.dart';
 import 'package:blogpost/module/post/domain/interactor/post_interactor.dart';
-import 'package:blogpost/module/post/presentation/state/bloc/posts_bloc.dart';
+import 'package:blogpost/module/post/presentation/state/posts/posts_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

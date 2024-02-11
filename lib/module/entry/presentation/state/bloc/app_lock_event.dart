@@ -20,3 +20,5 @@ class AppLockUnlockWithPinEvent extends AppLockEvent {
 }
 
 class AppLockUnlockWithFingerprintEvent extends AppLockEvent {}
+
+class AppLockResetSettingsEvent extends AppLockEvent {}
