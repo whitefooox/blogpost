@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:blogpost/module/post/domain/entity/post.dart';
 import 'package:blogpost/module/post/domain/interactor/post_interactor.dart';
 import 'package:flutter/material.dart';
@@ -5,7 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 enum PostLoadingStatus {
   loading,
-  error,
+  failure,
   success
 }
 
@@ -41,6 +43,7 @@ class _PostPageState extends State<PostPage> {
     super.initState();
     () async {
       try {
+        log("post page id: ${widget.postId}");
         post = await widget.postInteractor.getPostDetails(widget.postId);
         setState(() {
           loadingStatus = PostLoadingStatus.success;
@@ -48,7 +51,7 @@ class _PostPageState extends State<PostPage> {
       } catch (e) {
         errorMessage = e.toString();
         setState(() {
-          loadingStatus = PostLoadingStatus.error;
+          loadingStatus = PostLoadingStatus.failure;
         });
       }
     }();
@@ -67,10 +70,12 @@ class _PostPageState extends State<PostPage> {
     if(post!.isLiked){
       setState(() {
         post = post!.copyWith(isLiked: false, likesCount: post!.likesCount - 1);
+        widget.postInteractor.unlikePost(widget.postId);
       });
     } else {
       setState(() {
         post = post!.copyWith(isLiked: true, likesCount: post!.likesCount + 1);
+        widget.postInteractor.likePost(widget.postId);
       });
     }
   }

@@ -12,6 +12,7 @@ class BWTabBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TabBar(
+      labelColor: Colors.black,
       indicatorColor: Colors.black,
       controller: tabController,
       labelPadding: const EdgeInsets.all(0),

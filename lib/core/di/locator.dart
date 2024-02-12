@@ -13,7 +13,7 @@ import 'package:blogpost/module/entry/domain/dependency/i_pin_repository.dart';
 import 'package:blogpost/module/entry/domain/interactor/lock_interactor.dart';
 import 'package:blogpost/module/entry/presentation/state/bloc/app_lock_bloc.dart';
 import 'package:blogpost/module/post/data/mock_post_repository.dart';
-import 'package:blogpost/module/post/domain/dependency/i_post_repository.dart';
+import 'package:blogpost/module/post/domain/dependency/i_post_service.dart';
 import 'package:blogpost/module/post/domain/interactor/post_interactor.dart';
 import 'package:blogpost/module/post/presentation/state/posts/posts_bloc.dart';
 import 'package:get_it/get_it.dart';
@@ -43,7 +43,7 @@ void injectEntryModule(){
 }
 
 void injectPostsModule(){
-  final postsRepository = getIt.registerSingleton<IPostRepository>(MockPostRepository());
+  final postsRepository = getIt.registerSingleton<IPostService>(MockPostRepository());
   final postsInteractor = getIt.registerSingleton<PostInteractor>(PostInteractor(postsRepository));
   getIt.registerSingleton<PostsBloc>(PostsBloc());
 }

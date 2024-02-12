@@ -1,4 +1,6 @@
 
+import 'dart:developer';
+
 import 'package:blogpost/module/auth/presentation/page/signin_page.dart';
 import 'package:blogpost/module/auth/presentation/page/signup_page.dart';
 import 'package:blogpost/module/auth/presentation/state/bloc/auth_bloc.dart';
@@ -62,7 +64,7 @@ class AppRouter {
                         create: (context) =>
                             PostsBloc()..add(PostsFetchEvent()))
                   ],
-                  child: const BlogPostPage(),
+                  child: BlogPostPage(postInteractor: _postInteractor, isAuthorized: _authBloc.state is AuthAuthorizedState,),
                 ));
       case "/create_lock":
         return MaterialPageRoute(builder: (_) => const CreateLockPage());
@@ -82,6 +84,7 @@ class AppRouter {
       case "/post":
         {
           final postId = settings.arguments;
+          log("postId: $postId");
           if (postId is String) {
             return MaterialPageRoute(
               builder: (_) => PostPage(postId: postId, postInteractor: _postInteractor,),
