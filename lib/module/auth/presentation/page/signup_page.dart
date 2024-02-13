@@ -2,10 +2,10 @@ import 'dart:developer';
 
 import 'package:blogpost/core/resource/resource.dart';
 import 'package:blogpost/core/widget/bw_button.dart';
-import 'package:blogpost/module/auth/presentation/snackbar/auth_snackbar.dart';
+import 'package:blogpost/core/widget/loading_snackbar.dart';
 import 'package:blogpost/module/auth/presentation/state/bloc/auth_bloc.dart';
 import 'package:blogpost/module/auth/presentation/validation/auth_validator.dart';
-import 'package:blogpost/module/auth/presentation/widget/auth_input_field.dart';
+import 'package:blogpost/core/widget/bw_input_field.dart';
 import 'package:blogpost/module/auth/presentation/widget/auth_text_link.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -29,14 +29,11 @@ class SignUpPage extends StatelessWidget {
       listener: (context, state) {
         if (state is AuthLoadingState) {
           ScaffoldMessenger.of(context)
-              .showSnackBar(AuthSnackBars.loadingSnackBar);
+              .showSnackBar(LoadingSnackBars.loadingSnackBar);
         } else if (state is AuthFailureState) {
           ScaffoldMessenger.of(context)
-              .showSnackBar(AuthSnackBars.errorSnackBar(state.message));
-        } else if (state is AuthUnauthorizedState) {
-          ScaffoldMessenger.of(context)
-              .showSnackBar(AuthSnackBars.unauthenticatedSnackBar);
-        } if (state is AuthAuthorizedState) {
+              .showSnackBar(LoadingSnackBars.errorSnackBar(state.message));
+        } else if (state is AuthAuthorizedState) {
           Navigator.pushReplacementNamed(context, "/create_lock");
         }
       },
@@ -68,7 +65,7 @@ class SignUpPage extends StatelessWidget {
                     const SizedBox(
                       height: 25,
                     ),
-                    AuthInputField(
+                    BwInputField(
                       labelText: 'Email',
                       textController: _emailController,
                       validator: (value) {
@@ -84,7 +81,7 @@ class SignUpPage extends StatelessWidget {
                     const SizedBox(
                       height: 10,
                     ),
-                    AuthInputField(
+                    BwInputField(
                       labelText: 'Password',
                       textController: _passwordController,
                       validator: (value) {
@@ -101,7 +98,7 @@ class SignUpPage extends StatelessWidget {
                     const SizedBox(
                       height: 10,
                     ),
-                    AuthInputField(
+                    BwInputField(
                       labelText: 'Confirm password',
                       textController: _passwordConfirmController,
                       validator: (value) {

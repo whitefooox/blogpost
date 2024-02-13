@@ -7,6 +7,6 @@ abstract class IPostService {
   Future<void> addPost(Post post); //добавить пост
   Future<void> deletePost(int id); //удалить пост
   Future<void> editPost(Post post); //редактировать пост
-  Future<void> likePost(String id);
-  Future<void> unlikePost(String id);
+  Future<void> likePost(String id); //лайк поста
+  Future<void> unlikePost(String id); //убрать лайк с поста
 }

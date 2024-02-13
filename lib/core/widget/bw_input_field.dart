@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
-class AuthInputField extends StatelessWidget {
+class BwInputField extends StatelessWidget {
 
   final TextEditingController textController;
   final String? Function(String?)? validator;
   final String labelText;
   final bool isHidden;
 
-  const AuthInputField({
+  const BwInputField({
     super.key,
     required this.labelText,
     required this.textController,

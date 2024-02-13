@@ -5,24 +5,25 @@ import 'package:flutter/material.dart';
 class PostsList extends StatelessWidget {
 
   final List<Post> posts;
+  void Function(Post post) onTap;
 
-  const PostsList({
+  PostsList({
     super.key,
-    required this.posts
+    required this.posts,
+    required this.onTap
   });
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      physics: const ScrollPhysics(),
-      child: ListView.separated(
+    if(posts.isNotEmpty){
+      return ListView.separated(
         physics: const NeverScrollableScrollPhysics(),
         shrinkWrap: true,
         itemCount: posts.length,
         itemBuilder: (context, index) {
           return GestureDetector(
             onTap: (){
-              Navigator.pushNamed(context, "/post", arguments: posts[index].id);
+              onTap(posts[index]);
             },
             child: PostTile(post: posts[index])
           );
@@ -32,7 +33,11 @@ class PostsList extends StatelessWidget {
             height: 20,
           );
         },
-      ),
     );
+    } else {
+      return const Text(
+              "No posts"
+      );
+    }
   }
 }

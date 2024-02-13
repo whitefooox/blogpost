@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class AuthSnackBars {
+class LoadingSnackBars {
   static const loadingSnackBar = SnackBar(
     duration: Duration(seconds: 1),
     backgroundColor: Colors.black,
@@ -47,24 +47,24 @@ class AuthSnackBars {
     );
   }
 
-  static const unauthenticatedSnackBar = SnackBar(
+  static const successSnackBar = SnackBar(
     duration: Duration(seconds: 1),
     backgroundColor: Colors.black,
     content: Row(
       mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(
-            "Invalid email or password",
+            "Success",
             style: TextStyle(
               fontSize: 20,
-              color: Colors.red
+              color: Colors.green
             ),
           ),
-          SizedBox(width: 10,),
+          SizedBox(width: 20,),
           Icon(
-            Icons.warning,
-            color: Colors.red,
-            size: 30,
+            Icons.check,
+            color: Colors.green,
+            size: 30
           )
         ],
     )

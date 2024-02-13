@@ -14,8 +14,6 @@ class AuthFailureState extends AuthState {
 
 class AuthAuthorizedState extends AuthState {}
 
-class AuthUnauthorizedState extends AuthState {}
-
 /*
 
 enum AuthGlobalStatus {

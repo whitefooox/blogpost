@@ -1,18 +1,10 @@
+import 'package:blogpost/core/enum/loading_status.dart';
 import 'package:blogpost/core/widget/bw_icon_button.dart';
-import 'package:blogpost/module/auth/presentation/state/bloc/auth_bloc.dart';
 import 'package:blogpost/module/post/domain/entity/post.dart';
 import 'package:blogpost/module/post/domain/interactor/post_interactor.dart';
-import 'package:blogpost/module/post/presentation/state/posts/posts_bloc.dart';
 import 'package:blogpost/module/post/presentation/widget/bw_tab_bar.dart';
 import 'package:blogpost/module/post/presentation/widget/posts_list.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-
-enum PostsLoadingStatus {
-  loading,
-  failure,
-  success
-}
 
 class BlogPostPage extends StatefulWidget {
 
@@ -34,46 +26,46 @@ class _BlogPostPageState extends State<BlogPostPage>
 
   late TabController _tabController;
 
-  PostsLoadingStatus allPostsStatus = PostsLoadingStatus.loading;
+  LoadingStatus allPostsStatus = LoadingStatus.loading;
   String? errorMessageForAllPosts;
   List<Post> allPosts = [];
   List<Post>? allPostsSearched;
 
-  PostsLoadingStatus? myPostsStatus;
+  LoadingStatus? myPostsStatus;
   String? errorMessageForMyPosts;
   List<Post>? myPosts;
   List<Post>? myPostsSearched;
 
   void fetchAllPosts() async {
     setState(() {
-      allPostsStatus = PostsLoadingStatus.loading;
+      allPostsStatus = LoadingStatus.loading;
     });
     try {
       allPosts = await widget.postInteractor.getAllPosts();
       setState(() {
-        allPostsStatus = PostsLoadingStatus.success;
+        allPostsStatus = LoadingStatus.success;
       });
     } catch (e) {
       errorMessageForAllPosts = e.toString();
       setState(() {
-        allPostsStatus = PostsLoadingStatus.failure;
+        allPostsStatus = LoadingStatus.failure;
       });
     }
   }
 
   void fetchMyPosts() async {
     setState(() {
-      myPostsStatus = PostsLoadingStatus.loading;
+      myPostsStatus = LoadingStatus.loading;
     });
     try {
       myPosts = await widget.postInteractor.getMyPosts();
       setState(() {
-        myPostsStatus = PostsLoadingStatus.success;
+        myPostsStatus = LoadingStatus.success;
       });
     } catch (e) {
       errorMessageForMyPosts = e.toString();
       setState(() {
-        myPostsStatus = PostsLoadingStatus.failure;
+        myPostsStatus = LoadingStatus.failure;
       });
     }
   }
@@ -159,13 +151,13 @@ class _BlogPostPageState extends State<BlogPostPage>
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             SearchBar(
-              elevation: MaterialStatePropertyAll(0),
+              elevation: const MaterialStatePropertyAll(0),
               hintText: "Type post name",
-              backgroundColor: MaterialStatePropertyAll(Colors.white),
-              shape: MaterialStatePropertyAll(RoundedRectangleBorder(
+              backgroundColor: const MaterialStatePropertyAll(Colors.white),
+              shape: const MaterialStatePropertyAll(RoundedRectangleBorder(
                   borderRadius: BorderRadius.all(Radius.circular(5)),
                   side: BorderSide(color: Colors.black))),
-              leading: Icon(Icons.search),
+              leading: const Icon(Icons.search),
               onChanged: onQueryChanged,
             ),
             const SizedBox(
@@ -184,59 +176,85 @@ class _BlogPostPageState extends State<BlogPostPage>
                 controller: _tabController,
                   children: [
                     if(widget.isAuthorized)
-                    RefreshIndicator(
-                      color: Colors.black,
-                      onRefresh: () async {
-                        fetchMyPosts();
-                      },
-                      child: Center(
+                    LayoutBuilder(
+                      builder: (context, constraints) => RefreshIndicator(
+                        color: Colors.black,
+                        onRefresh: () async {
+                          fetchMyPosts();
+                        },
                         child: SingleChildScrollView(
-                          child: Builder(
-                            builder: (context){
-                              if(myPostsStatus == PostsLoadingStatus.loading){
-                                return const CircularProgressIndicator(
-                                  color: Colors.black,
-                                );
-                              } else if(myPostsStatus == PostsLoadingStatus.success){
-                                if(myPostsSearched != null){
-                                  return PostsList(posts: myPostsSearched!);
-                                } else {
-                                  return PostsList(posts: myPosts!..sort((a, b) => b.date.compareTo(a.date)));
-                                }
-                              } else {
-                                return const Placeholder();
-                              }
-                            }
-                          ),
-                        ),
-                      )
+                            physics: const AlwaysScrollableScrollPhysics(),
+                            child: ConstrainedBox(
+                              constraints: BoxConstraints(
+                                minHeight: constraints.maxHeight
+                              ),
+                              child: Center(
+                                child: Builder(
+                                  builder: (context){
+                                    if(myPostsStatus == LoadingStatus.loading){
+                                      return const CircularProgressIndicator(
+                                          color: Colors.black,
+                                      );
+                                    } else if(myPostsStatus == LoadingStatus.success){
+                                      if(myPostsSearched != null){
+                                        return PostsList(posts: myPostsSearched!, onTap: (post) {
+                                          Navigator.pushNamed(context, "/edit_post", arguments: post.id);
+                                        });
+                                      } else {
+                                        return PostsList(posts: myPosts!..sort((a, b) => b.date.compareTo(a.date)), onTap: (post) {
+                                          Navigator.pushNamed(context, "/edit_post", arguments: post.id);
+                                        },);
+                                      }
+                                    } else {
+                                      return const Text("Error");
+                                    }
+                                  }
+                                ),
+                              ),
+                            ),
+                        )
+                      ),
                     ),
-                    RefreshIndicator(
-                      color: Colors.black,
-                      onRefresh: () async {
-                        fetchAllPosts();
-                      },
-                      child: Center(
-                        child: SingleChildScrollView(
-                          child: Builder (
-                            builder: (context){
-                              if(allPostsStatus == PostsLoadingStatus.loading){
-                                return const CircularProgressIndicator(
-                                  color: Colors.black,
-                                );
-                              } else if(allPostsStatus == PostsLoadingStatus.success){
-                                if(allPostsSearched != null){
-                                  return PostsList(posts: allPostsSearched!);
-                                } else {
-                                  return PostsList(posts: allPosts..sort((a, b) => b.date.compareTo(a.date)));
-                                }
-                              } else {
-                                return const Placeholder();
-                              }
-                            }
+                    LayoutBuilder(
+                      builder: (context, constrains) => RefreshIndicator(
+                        color: Colors.black,
+                        onRefresh: () async {
+                          fetchAllPosts();
+                        },
+                        child: Center(
+                          child: SingleChildScrollView(
+                            physics: const AlwaysScrollableScrollPhysics(),
+                            child: ConstrainedBox(
+                              constraints: BoxConstraints(
+                                minHeight: constrains.maxHeight
+                              ),
+                              child: Center(
+                                child: Builder (
+                                  builder: (context){
+                                    if(allPostsStatus == LoadingStatus.loading){
+                                      return const CircularProgressIndicator(
+                                        color: Colors.black,
+                                      );
+                                    } else if(allPostsStatus == LoadingStatus.success){
+                                      if(allPostsSearched != null){
+                                        return PostsList(posts: allPostsSearched!, onTap: (post) {
+                                          Navigator.pushNamed(context, "/post", arguments: post.id);
+                                        },);
+                                      } else {
+                                        return PostsList(posts: allPosts..sort((a, b) => b.date.compareTo(a.date)), onTap: (post) {
+                                          Navigator.pushNamed(context, "/post", arguments: post.id);
+                                        },);
+                                      }
+                                    } else {
+                                      return const Text("Error");
+                                    }
+                                  }
+                                ),
+                              ),
+                            ),
                           ),
-                        ),
-                      )
+                        )
+                      ),
                     ),
                   ]
               ),

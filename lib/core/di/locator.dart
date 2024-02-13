@@ -1,7 +1,5 @@
-import 'package:blogpost/module/auth/data/mock_auth_service.dart';
-import 'package:blogpost/module/auth/data/token_manager.dart';
+import 'package:blogpost/module/auth/data/firebase_auth_service.dart';
 import 'package:blogpost/module/auth/domain/dependency/i_auth_service.dart';
-import 'package:blogpost/module/auth/domain/dependency/i_token_manager.dart';
 import 'package:blogpost/module/auth/domain/interactor/auth_interactor.dart';
 import 'package:blogpost/module/auth/presentation/state/bloc/auth_bloc.dart';
 import 'package:blogpost/module/entry/data/biometry_service.dart';
@@ -12,10 +10,15 @@ import 'package:blogpost/module/entry/domain/dependency/i_biometry_service.dart'
 import 'package:blogpost/module/entry/domain/dependency/i_pin_repository.dart';
 import 'package:blogpost/module/entry/domain/interactor/lock_interactor.dart';
 import 'package:blogpost/module/entry/presentation/state/bloc/app_lock_bloc.dart';
+import 'package:blogpost/module/post/data/mock_comment_service.dart';
 import 'package:blogpost/module/post/data/mock_post_repository.dart';
+import 'package:blogpost/module/post/domain/dependency/i_comment_service.dart';
 import 'package:blogpost/module/post/domain/dependency/i_post_service.dart';
+import 'package:blogpost/module/post/domain/interactor/comment_interactor.dart';
 import 'package:blogpost/module/post/domain/interactor/post_interactor.dart';
-import 'package:blogpost/module/post/presentation/state/posts/posts_bloc.dart';
+import 'package:blogpost/module/user/data/firebase_user_service.dart';
+import 'package:blogpost/module/user/domain/dependency/i_user_service.dart';
+import 'package:blogpost/module/user/domain/interactor/user_interactor.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -28,9 +31,10 @@ Future<void> injectLocalData() async {
 }
 
 void injectAuthModule() {
-  final tokenManager = getIt.registerSingleton<ITokenManager>(TokenManager(sharedPreferences));
-  final authService = getIt.registerSingleton<IAuthService>(MockAuthService());
-  final authInteractor = getIt.registerSingleton<AuthInteractor>(AuthInteractor(tokenManager, authService));
+  final userService = getIt.registerSingleton<IUserService>(FirebaseUserService());
+  final userInteractor = getIt.registerSingleton<UserInteractor>(UserInteractor(userService));
+  final authService = getIt.registerSingleton<IAuthService>(FirebaseAuthService(userService));
+  final authInteractor = getIt.registerSingleton<AuthInteractor>(AuthInteractor(authService));
   getIt.registerSingleton<AuthBloc>(AuthBloc());
 }
 
@@ -45,7 +49,9 @@ void injectEntryModule(){
 void injectPostsModule(){
   final postsRepository = getIt.registerSingleton<IPostService>(MockPostRepository());
   final postsInteractor = getIt.registerSingleton<PostInteractor>(PostInteractor(postsRepository));
-  getIt.registerSingleton<PostsBloc>(PostsBloc());
+
+  final commentService = getIt.registerSingleton<ICommentService>(MockCommentService());
+  final commentInteractor = getIt.registerSingleton<CommentInteractor>(CommentInteractor(commentService));
 }
 
 Future<void> setupLocator() async {

@@ -1,24 +1,19 @@
-import 'dart:developer';
 
+import 'package:blogpost/core/enum/loading_status.dart';
 import 'package:blogpost/module/post/domain/entity/post.dart';
 import 'package:blogpost/module/post/domain/interactor/post_interactor.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-
-enum PostLoadingStatus {
-  loading,
-  failure,
-  success
-}
 
 class PostPage extends StatefulWidget {
   final String postId;
+  final bool isAuthorized;
   final PostInteractor postInteractor;
 
   const PostPage({
     super.key, 
     required this.postId,
-    required this.postInteractor
+    required this.postInteractor,
+    required this.isAuthorized
   });
 
   @override
@@ -27,7 +22,7 @@ class PostPage extends StatefulWidget {
 
 class _PostPageState extends State<PostPage> {
 
-  PostLoadingStatus loadingStatus = PostLoadingStatus.loading;
+  LoadingStatus loadingStatus = LoadingStatus.loading;
   String? errorMessage;
   Post? post;
 
@@ -43,15 +38,14 @@ class _PostPageState extends State<PostPage> {
     super.initState();
     () async {
       try {
-        log("post page id: ${widget.postId}");
         post = await widget.postInteractor.getPostDetails(widget.postId);
         setState(() {
-          loadingStatus = PostLoadingStatus.success;
+          loadingStatus = LoadingStatus.success;
         });
       } catch (e) {
         errorMessage = e.toString();
         setState(() {
-          loadingStatus = PostLoadingStatus.failure;
+          loadingStatus = LoadingStatus.failure;
         });
       }
     }();
@@ -89,9 +83,13 @@ class _PostPageState extends State<PostPage> {
       ),
       body: Builder(
         builder: (context){
-          if(loadingStatus == PostLoadingStatus.loading){
-            return const Center(child: CircularProgressIndicator());
-          } else if(loadingStatus == PostLoadingStatus.success) {
+          if(loadingStatus == LoadingStatus.loading){
+            return const Center(
+              child: CircularProgressIndicator(
+                color: Colors.black,
+              )
+            );
+          } else if(loadingStatus == LoadingStatus.success) {
             return SingleChildScrollView(
                 child: Padding(
                   padding: EdgeInsets.only(
@@ -130,12 +128,18 @@ class _PostPageState extends State<PostPage> {
                         children: [
                           Row(
                         children: [
+                          widget.isAuthorized ?
                           IconButton(
                             onPressed: likeOrUnlike, 
                             icon: Icon(
                               post!.isLiked ? Icons.thumb_up : Icons.thumb_up_outlined,
                               size: 25,
                             ),
+                          )
+                          :
+                          Icon(
+                            post!.isLiked ? Icons.thumb_up : Icons.thumb_up_outlined,
+                            size: 25,
                           ),
                           const SizedBox(width: 5,),
                           Text(
@@ -148,9 +152,12 @@ class _PostPageState extends State<PostPage> {
                       ),
                       Row(
                         children: [
-                          const Icon(
-                            Icons.mode_comment_outlined,
-                            size: 25,
+                          IconButton(
+                            onPressed: openComments, 
+                            icon: const Icon(
+                              Icons.mode_comment_outlined,
+                              size: 25,
+                            ),
                           ),
                           const SizedBox(width: 5,),
                           Text(

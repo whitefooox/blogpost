@@ -94,13 +94,23 @@ class _CreateLockPageState extends State<CreateLockPage> {
           ),
           actions: <Widget>[
             TextButton(
-              child: const Text('No'),
+              child: const Text(
+                'No',
+                style: TextStyle(
+                  color: Colors.black
+                ),
+              ),
               onPressed: () {
                 Navigator.of(context).pop(false);
               },
             ),
             TextButton(
-              child: const Text('Yes'),
+              child: const Text(
+                'Yes',
+                style: TextStyle(
+                  color: Colors.black
+                ),
+              ),
               onPressed: () {
                 Navigator.of(context).pop(true);
               },

@@ -1,4 +1,3 @@
-import 'dart:developer';
 
 import 'package:blogpost/core/exception/app_exception.dart';
 import 'package:blogpost/module/post/domain/dependency/i_post_service.dart';
@@ -6,7 +5,7 @@ import 'package:blogpost/module/post/domain/entity/post.dart';
 
 class MockPostRepository implements IPostService {
 
-  List<Post> posts = [
+  static List<Post> posts = [
     Post(
       id: '1', 
       title: "First Post", 
@@ -17,24 +16,6 @@ class MockPostRepository implements IPostService {
       date: DateTime.now(), 
       likesCount: 123, 
       commentsCount: 56,
-      isLiked: true,
-      textContent: 
-      """
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-      """
-    ),
-
-    Post(
-      id: '2', 
-      title: "Second Post", 
-      image: "https://i.imgflip.com/7gll6v.jpg", 
-      authorId: 1,
-      authorName: "cat", 
-      authorAvatar: "https://cdn3.iconfinder.com/data/icons/avatars-9/145/Avatar_Cat-512.png", 
-      date: DateTime.now().add(const Duration(days: 2)), 
-      likesCount: 75, 
-      commentsCount: 5,
       isLiked: false,
       textContent: 
       """
@@ -44,22 +25,26 @@ class MockPostRepository implements IPostService {
     ),
 
     Post(
-      id: '3', 
-      title: "Dog Post", 
-      image: "https://i.imgflip.com/7gll6v.jpg", 
-      authorId: 2,
-      authorName: "dog", 
-      authorAvatar: "https://cdn-icons-png.flaticon.com/512/4775/4775486.png", 
-      date: DateTime.now().add(const Duration(days: 2)), 
-      likesCount: 75, 
-      commentsCount: 5,
-      isLiked: false,
-      textContent: 
+      id: '4', 
+      title: "Автоматические двери: История создания. От механики до магнитной левитации", 
+      image: "https://habrastorage.org/r/w1560/getpro/habr/upload_files/873/873/45f/87387345f972c0d96b3b8edd5bf2d43f.jpg", 
+      authorId: 4, 
+      authorName: "Артем", 
+      authorAvatar: "https://cdn.iconscout.com/icon/free/png-256/free-avatar-370-456322.png?f=webp", 
+      date: DateTime.now(), 
+      isLiked: false, 
+      likesCount: 1, 
+      commentsCount: 1,
+      textContent:
       """
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+      В какой степени прошлое может «объяснить» настоящее, и предсказать будущее? Почему автоматические двери, появившиеся в рекламных каталогах производителей в 1910 году, начали использоваться лишь в конце 20 века. 
+      В этой статье мы рассмотрим историческую ретроспективу появления автоматических дверей, попробуем разобраться, почему процесс шел так, а не иначе, и немного поговорим про настоящее и будущее автоматических дверей.
+      Первая автоматическая дверь | 1 век н.э.
+      Первые «автоматические» двери были изобретены греческим математиком и инженером Героном Александрийским примерно в 60-х годах первого века нашей эры.
+      Устройство автоматических дверей описано в трактате «Пневматика», который, по всей вероятности, представляет собой собрание текстов Герона, написанных на греческом языке и собранных в одну книгу после его смерти.
+      Самая ранняя сохранившаяся рукописная греческая копия этого текста, датируется 13 веком. Первое печатное латинское издание было опубликовано под названием «Heronis Alexandrini Spiritalium liber» в 1575 году.
       """
-    ),
+    )
   ];
 
   @override
@@ -94,7 +79,6 @@ class MockPostRepository implements IPostService {
     await Future.delayed(const Duration(seconds: 3));
     for (var post in posts) { 
       if(post.id == id){
-        log("${post.title}");
         return post;
       }
     }

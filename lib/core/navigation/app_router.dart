@@ -1,5 +1,4 @@
 
-import 'dart:developer';
 
 import 'package:blogpost/module/auth/presentation/page/signin_page.dart';
 import 'package:blogpost/module/auth/presentation/page/signup_page.dart';
@@ -7,12 +6,15 @@ import 'package:blogpost/module/auth/presentation/state/bloc/auth_bloc.dart';
 import 'package:blogpost/module/entry/presentation/page/create_lock_page.dart';
 import 'package:blogpost/module/entry/presentation/page/enter_lock_page.dart';
 import 'package:blogpost/module/entry/presentation/state/bloc/app_lock_bloc.dart';
+import 'package:blogpost/module/post/domain/interactor/comment_interactor.dart';
 import 'package:blogpost/module/post/domain/interactor/post_interactor.dart';
 import 'package:blogpost/module/post/presentation/page/blog_post_page.dart';
+import 'package:blogpost/module/post/presentation/page/comments_page.dart';
 import 'package:blogpost/module/post/presentation/page/edit_post_page.dart';
 import 'package:blogpost/module/post/presentation/page/post_page.dart';
-import 'package:blogpost/module/post/presentation/state/posts/posts_bloc.dart';
 import 'package:blogpost/module/settings/presentation/page/settings_page.dart';
+import 'package:blogpost/module/user/domain/interactor/user_interactor.dart';
+import 'package:blogpost/module/user/presentation/page/profile_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
@@ -22,10 +24,11 @@ class AppRouter {
   final initialRoute = "/";
 
   final _postInteractor = GetIt.instance.get<PostInteractor>();
+  final _commentInteractor = GetIt.instance.get<CommentInteractor>();
+  final _userInteractor = GetIt.instance.get<UserInteractor>();
 
   final _authBloc = GetIt.instance.get<AuthBloc>()..add(AuthAppLoadedEvent());
-  final _lockBloc = GetIt.instance.get<AppLockBloc>()
-    ..add(AppLockAppLoadedEvent());
+  final _lockBloc = GetIt.instance.get<AppLockBloc>()..add(AppLockAppLoadedEvent());
 
   Route? onGenerateRoute(RouteSettings settings) {
     switch (settings.name) {
@@ -60,9 +63,6 @@ class AppRouter {
             builder: (_) => MultiBlocProvider(
                   providers: [
                     BlocProvider.value(value: _authBloc),
-                    BlocProvider(
-                        create: (context) =>
-                            PostsBloc()..add(PostsFetchEvent()))
                   ],
                   child: BlogPostPage(postInteractor: _postInteractor, isAuthorized: _authBloc.state is AuthAuthorizedState,),
                 ));
@@ -77,22 +77,42 @@ class AppRouter {
                     BlocProvider.value(value: _authBloc),
                     BlocProvider.value(value: _lockBloc),
                   ],
-                  child: const SettingsPage(),
+                  child: SettingsPage(userInteractor: _userInteractor,),
                 ));
       case "/edit_post":
-        return MaterialPageRoute(builder: (_) => const EditPostPage());
+      {
+        final postId = settings.arguments;
+        if(postId is String){
+          return MaterialPageRoute(builder: (_) => EditPostPage(postId: postId,));
+        } else {
+          return MaterialPageRoute(builder: (_) => const EditPostPage());
+        }
+      }
       case "/post":
         {
           final postId = settings.arguments;
-          log("postId: $postId");
           if (postId is String) {
             return MaterialPageRoute(
-              builder: (_) => PostPage(postId: postId, postInteractor: _postInteractor,),
-              );
+              builder: (_) => PostPage(postId: postId, postInteractor: _postInteractor, isAuthorized: _authBloc.state is AuthAuthorizedState,),
+            );
           } else {
             return null;
           }
         }
+      case "/comments":
+      {
+        final postId = settings.arguments;
+          if (postId is String) {
+            return MaterialPageRoute(
+              builder: (_) => CommentsPage(postId: postId, commentInteractor: _commentInteractor, isAuthorized: _authBloc.state is AuthAuthorizedState,),
+            );
+          } else {
+            return null;
+          }
+      }
+      case "/profile": {
+        return MaterialPageRoute(builder: (_) => ProfilePage(userInteractor: _userInteractor,)); 
+      }
       default:
         return null;
     }

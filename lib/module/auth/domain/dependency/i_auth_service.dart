@@ -1,5 +1,6 @@
 abstract class IAuthService {
-  Future<String?> signIn(String email, String password);
-  Future<String?> signUp(String email, String password);
+  Future<void> signIn(String email, String password);
+  Future<void> signUp(String email, String password);
   Future<void> signOut();
+  bool checkAuthorization();
 }
