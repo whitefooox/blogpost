@@ -10,8 +10,8 @@ import 'package:blogpost/module/entry/domain/dependency/i_biometry_service.dart'
 import 'package:blogpost/module/entry/domain/dependency/i_pin_repository.dart';
 import 'package:blogpost/module/entry/domain/interactor/lock_interactor.dart';
 import 'package:blogpost/module/entry/presentation/state/bloc/app_lock_bloc.dart';
+import 'package:blogpost/module/post/data/firebase_post_service.dart';
 import 'package:blogpost/module/post/data/mock_comment_service.dart';
-import 'package:blogpost/module/post/data/mock_post_repository.dart';
 import 'package:blogpost/module/post/domain/dependency/i_comment_service.dart';
 import 'package:blogpost/module/post/domain/dependency/i_post_service.dart';
 import 'package:blogpost/module/post/domain/interactor/comment_interactor.dart';
@@ -47,7 +47,7 @@ void injectEntryModule(){
 }
 
 void injectPostsModule(){
-  final postsRepository = getIt.registerSingleton<IPostService>(MockPostRepository());
+  final postsRepository = getIt.registerSingleton<IPostService>(FirebasePostService());
   final postsInteractor = getIt.registerSingleton<PostInteractor>(PostInteractor(postsRepository));
 
   final commentService = getIt.registerSingleton<ICommentService>(MockCommentService());

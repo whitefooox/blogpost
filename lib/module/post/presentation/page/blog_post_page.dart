@@ -128,7 +128,7 @@ class _BlogPostPageState extends State<BlogPostPage>
           ? BwIconButton(
               iconData: Icons.add,
               onPressed: () {
-                Navigator.pushNamed(context, "/edit_post");
+                Navigator.pushNamed(context, "/create_post");
               },
             )
           : null,
@@ -201,9 +201,9 @@ class _BlogPostPageState extends State<BlogPostPage>
                                           Navigator.pushNamed(context, "/edit_post", arguments: post.id);
                                         });
                                       } else {
-                                        return PostsList(posts: myPosts!..sort((a, b) => b.date.compareTo(a.date)), onTap: (post) {
+                                        return PostsList(posts: myPosts!..sort((a, b) => b.createdAt!.compareTo(a.createdAt!)), onTap: (post) {
                                           Navigator.pushNamed(context, "/edit_post", arguments: post.id);
-                                        },);
+                                        });
                                       }
                                     } else {
                                       return const Text("Error");
@@ -239,11 +239,11 @@ class _BlogPostPageState extends State<BlogPostPage>
                                       if(allPostsSearched != null){
                                         return PostsList(posts: allPostsSearched!, onTap: (post) {
                                           Navigator.pushNamed(context, "/post", arguments: post.id);
-                                        },);
+                                        });
                                       } else {
-                                        return PostsList(posts: allPosts..sort((a, b) => b.date.compareTo(a.date)), onTap: (post) {
+                                        return PostsList(posts: allPosts..sort((a, b) => b.createdAt!.compareTo(a.createdAt!)), onTap: (post) {
                                           Navigator.pushNamed(context, "/post", arguments: post.id);
-                                        },);
+                                        });
                                       }
                                     } else {
                                       return const Text("Error");

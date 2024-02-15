@@ -1,4 +1,5 @@
 import 'package:blogpost/module/post/domain/entity/post.dart';
+import 'package:blogpost/module/post/presentation/widget/like_button.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -9,7 +10,7 @@ class PostTile extends StatelessWidget {
 
   PostTile({
     super.key, 
-    required this.post
+    required this.post,
   });
 
   @override
@@ -22,7 +23,6 @@ class PostTile extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.all(20.0),
         child: Column(
-          //mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
@@ -39,21 +39,30 @@ class PostTile extends StatelessWidget {
               children: [
                 Row(
                   children: [
-                    CircleAvatar(
-                      backgroundImage: NetworkImage(post.authorAvatar),
+                    const CircleAvatar(
+                      //backgroundImage: NetworkImage(post.authorAvatar),
                     ),
                     const SizedBox(width: 10,),
-                    Text(post.authorName),
+                    Builder(
+                      builder: (context){
+                        if(post.authorName != null){
+                          return Text(post.authorName!);
+                        } else {
+                          return const Text("No name");
+                        }
+                      }
+                    )
                   ],
                 ),
-                Text(formatter.format(post.date))
+                Text(formatter.format(post.createdAt!))
               ],
             ),
             const SizedBox(height: 10,),
             ClipRRect(
               borderRadius: BorderRadius.circular(5.0),
-              child: Image.network(
-                  post.image,
+              child: 
+              Image.network(
+                  post.imageUrl,
                   width: double.maxFinite,
                   fit: BoxFit.fitWidth,
               ),
@@ -62,20 +71,9 @@ class PostTile extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                Row(
-                  children: [
-                    Icon(
-                      post.isLiked ? Icons.thumb_up : Icons.thumb_up_outlined,
-                      size: 25,
-                    ),
-                    const SizedBox(width: 5,),
-                    Text(
-                      post.likesCount.toString(),
-                      style: const TextStyle(
-                        fontSize: 20
-                      ),
-                    )
-                  ],
+                LikeButton(
+                  count: post.likesCount!,
+                  isLiked: post.isLiked,
                 ),
                 const SizedBox(width: 10,),
                 Row(

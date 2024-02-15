@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:blogpost/module/post/domain/dependency/i_post_service.dart';
 import 'package:blogpost/module/post/domain/entity/post.dart';
 
@@ -36,5 +38,17 @@ class PostInteractor {
 
   Future<void> unlikePost(String id) async {
     return _postService.unlikePost(id);
+  }
+
+  Future<void> createPost(String title, String content, bool isPublished, File image){
+    return _postService.addPost(title, content, isPublished, image);
+  }
+
+  Future<void> deletePost(String postId){
+    return _postService.deletePost(postId);
+  }
+
+  Future<void> updatePost(String postId, String? title, String? content, bool? isPublished, File? image){
+    return _postService.updatePost(postId, title, content, isPublished, image);
   }
 }

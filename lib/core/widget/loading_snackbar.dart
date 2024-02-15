@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 class LoadingSnackBars {
   static const loadingSnackBar = SnackBar(
-    duration: Duration(seconds: 1),
     backgroundColor: Colors.black,
     content: Row(
       mainAxisAlignment: MainAxisAlignment.center,

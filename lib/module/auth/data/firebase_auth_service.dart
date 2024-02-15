@@ -36,7 +36,10 @@ class FirebaseAuthService implements IAuthService {
   Future<void> signUp(String email, String password) async {
     try {
       await _firebaseAuth.createUserWithEmailAndPassword(email: email, password: password);
-      await _firebaseUserService.createUser(domain.User(email: email, id: _firebaseAuth.currentUser!.uid));
+      await _firebaseUserService.createUser(domain.User(
+        email: email, 
+        id: _firebaseAuth.currentUser!.uid,
+      ));
     } catch (e) {
       log(e.toString());
       throw AppException(message: "Error in auth service");

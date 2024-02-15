@@ -1,61 +1,139 @@
-import 'package:blogpost/module/post/domain/entity/comment.dart';
+// ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'dart:convert';
 
 class Post {
   final String id;
   final String title;
-  final String image;
-  final int authorId;
-  final String authorName;
-  final String authorAvatar;
-  final DateTime date;
-  final int likesCount;
-  final bool isLiked; //поставлен лайк или нет
-  final int commentsCount;
-  final List<Comment>? comments;
-  final String? textContent;
-
+  final String imageUrl;
+  final String? authorId;
+  final String? authorName;
+  final String? authorAvatar;
+  final DateTime? createdAt;
+  final int? likesCount;
+  final bool? isLiked; //поставлен лайк или нет
+  final bool? isPublished;
+  final int? commentsCount;
+  final String? content;
   Post({
     required this.id,
-    required this.title, 
-    required this.image, 
-    required this.authorId,
-    required this.authorName, 
-    required this.authorAvatar, 
-    required this.date, 
-    required this.isLiked,
-    required this.likesCount, 
-    required this.commentsCount,
-    this.textContent,
-    this.comments
+    required this.title,
+    required this.imageUrl,
+    this.authorId,
+    this.authorName,
+    this.authorAvatar,
+    this.createdAt,
+    this.likesCount,
+    this.isLiked,
+    this.isPublished,
+    this.commentsCount,
+    this.content,
   });
 
   Post copyWith({
     String? id,
     String? title,
-    String? image,
-    int? authorId,
+    String? imageUrl,
+    String? authorId,
     String? authorName,
     String? authorAvatar,
-    DateTime? date,
+    DateTime? createdAt,
     int? likesCount,
     bool? isLiked,
+    bool? isPublished,
     int? commentsCount,
-    List<Comment>? comments,
-    String? textContent,
+    String? content,
   }) {
     return Post(
       id: id ?? this.id,
       title: title ?? this.title,
-      image: image ?? this.image,
+      imageUrl: imageUrl ?? this.imageUrl,
       authorId: authorId ?? this.authorId,
       authorName: authorName ?? this.authorName,
       authorAvatar: authorAvatar ?? this.authorAvatar,
-      date: date ?? this.date,
+      createdAt: createdAt ?? this.createdAt,
       likesCount: likesCount ?? this.likesCount,
       isLiked: isLiked ?? this.isLiked,
+      isPublished: isPublished ?? this.isPublished,
       commentsCount: commentsCount ?? this.commentsCount,
-      comments: comments ?? this.comments,
-      textContent: textContent ?? this.textContent,
+      content: content ?? this.content,
     );
+  }
+
+  Map<String, dynamic> toMap() {
+    return <String, dynamic>{
+      'id': id,
+      'title': title,
+      'imageUrl': imageUrl,
+      'authorId': authorId,
+      'authorName': authorName,
+      'authorAvatar': authorAvatar,
+      'createdAt': createdAt!.millisecondsSinceEpoch,
+      'likesCount': likesCount,
+      'isLiked': isLiked,
+      'isPublished': isPublished,
+      'commentsCount': commentsCount,
+      'content': content,
+    };
+  }
+
+  factory Post.fromMap(Map<String, dynamic> map) {
+    return Post(
+      id: map['id'] as String,
+      title: map['title'] as String,
+      imageUrl: map['imageUrl'] as String,
+      authorId: map['authorId'] as String,
+      authorName: map['authorName'] != null ? map['authorName'] as String : null,
+      authorAvatar: map['authorAvatar'] != null ? map['authorAvatar'] as String : null,
+      createdAt: DateTime.fromMillisecondsSinceEpoch(map['createdAt'] as int),
+      likesCount: map['likesCount'] as int,
+      isLiked: map['isLiked'] as bool,
+      isPublished: map['isPublished'] as bool,
+      commentsCount: map['commentsCount'] as int,
+      content: map['content'] != null ? map['content'] as String : null,
+    );
+  }
+
+  String toJson() => json.encode(toMap());
+
+  factory Post.fromJson(String source) => Post.fromMap(json.decode(source) as Map<String, dynamic>);
+
+  @override
+  String toString() {
+    return 'Post(id: $id, title: $title, imageUrl: $imageUrl, authorId: $authorId, authorName: $authorName, authorAvatar: $authorAvatar, createdAt: $createdAt, likesCount: $likesCount, isLiked: $isLiked, isPublished: $isPublished, commentsCount: $commentsCount, content: $content)';
+  }
+
+  @override
+  bool operator ==(covariant Post other) {
+    if (identical(this, other)) return true;
+  
+    return 
+      other.id == id &&
+      other.title == title &&
+      other.imageUrl == imageUrl &&
+      other.authorId == authorId &&
+      other.authorName == authorName &&
+      other.authorAvatar == authorAvatar &&
+      other.createdAt == createdAt &&
+      other.likesCount == likesCount &&
+      other.isLiked == isLiked &&
+      other.isPublished == isPublished &&
+      other.commentsCount == commentsCount &&
+      other.content == content;
+  }
+
+  @override
+  int get hashCode {
+    return id.hashCode ^
+      title.hashCode ^
+      imageUrl.hashCode ^
+      authorId.hashCode ^
+      authorName.hashCode ^
+      authorAvatar.hashCode ^
+      createdAt.hashCode ^
+      likesCount.hashCode ^
+      isLiked.hashCode ^
+      isPublished.hashCode ^
+      commentsCount.hashCode ^
+      content.hashCode;
   }
 }

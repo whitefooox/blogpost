@@ -2,22 +2,34 @@ import 'package:flutter/material.dart';
 
 class BwInputField extends StatelessWidget {
 
-  final TextEditingController textController;
+  final TextEditingController? textController;
   final String? Function(String?)? validator;
   final String labelText;
   final bool isHidden;
+  final TextInputType? keyboardType;
+  final int? maxLines;
+  final Function(String)? onChanged;
+  final String? initialValue;
 
   const BwInputField({
     super.key,
     required this.labelText,
-    required this.textController,
+    this.textController,
     this.validator,
-    this.isHidden = false
+    this.isHidden = false,
+    this.keyboardType,
+    this.maxLines,
+    this.onChanged,
+    this.initialValue
   });
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      initialValue: initialValue,
+      onChanged: onChanged,
+      keyboardType: keyboardType,
+      maxLines: maxLines ?? 1,
       obscureText: isHidden,
       controller: textController,
       style: const TextStyle(

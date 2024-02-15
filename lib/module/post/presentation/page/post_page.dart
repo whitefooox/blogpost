@@ -2,6 +2,7 @@
 import 'package:blogpost/core/enum/loading_status.dart';
 import 'package:blogpost/module/post/domain/entity/post.dart';
 import 'package:blogpost/module/post/domain/interactor/post_interactor.dart';
+import 'package:blogpost/module/post/presentation/widget/like_button.dart';
 import 'package:flutter/material.dart';
 
 class PostPage extends StatefulWidget {
@@ -61,14 +62,14 @@ class _PostPageState extends State<PostPage> {
   }
 
   void likeOrUnlike(){
-    if(post!.isLiked){
+    if(post!.isLiked!){
       setState(() {
-        post = post!.copyWith(isLiked: false, likesCount: post!.likesCount - 1);
+        post = post!.copyWith(isLiked: false, likesCount: post!.likesCount! - 1);
         widget.postInteractor.unlikePost(widget.postId);
       });
     } else {
       setState(() {
-        post = post!.copyWith(isLiked: true, likesCount: post!.likesCount + 1);
+        post = post!.copyWith(isLiked: true, likesCount: post!.likesCount! + 1);
         widget.postInteractor.likePost(widget.postId);
       });
     }
@@ -76,7 +77,6 @@ class _PostPageState extends State<PostPage> {
 
   @override
   Widget build(BuildContext context) {
-    final deviceSize = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
         title: const Text("View post"),
@@ -92,10 +92,9 @@ class _PostPageState extends State<PostPage> {
           } else if(loadingStatus == LoadingStatus.success) {
             return SingleChildScrollView(
                 child: Padding(
-                  padding: EdgeInsets.only(
-                    left: deviceSize.width * 0.04, 
-                    right: deviceSize.width * 0.04,
-                    top: deviceSize.height * 0.01
+                  padding: const EdgeInsets.only(
+                    left: 25, 
+                    right: 25,
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -103,21 +102,21 @@ class _PostPageState extends State<PostPage> {
                       ClipRRect(
                         borderRadius: BorderRadius.circular(5.0),
                         child: Image.network(
-                            post!.image,
+                            post!.imageUrl,
                             width: double.maxFinite,
                             fit: BoxFit.fitWidth,
                         ),
                       ),
-                      SizedBox(height: deviceSize.height * 0.02,),
+                      const SizedBox(height: 20),
                       Text(
                         post!.title,
                         style: const TextStyle(
                           fontSize: 20
                         ),
                       ),
-                      SizedBox(height: deviceSize.height * 0.02,),
+                      const SizedBox(height: 20),
                       Text(
-                        post!.textContent!,
+                        post!.content!,
                         textAlign: TextAlign.justify,
                         style: const TextStyle(
                           fontSize: 14
@@ -126,29 +125,10 @@ class _PostPageState extends State<PostPage> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
-                          Row(
-                        children: [
-                          widget.isAuthorized ?
-                          IconButton(
-                            onPressed: likeOrUnlike, 
-                            icon: Icon(
-                              post!.isLiked ? Icons.thumb_up : Icons.thumb_up_outlined,
-                              size: 25,
-                            ),
-                          )
-                          :
-                          Icon(
-                            post!.isLiked ? Icons.thumb_up : Icons.thumb_up_outlined,
-                            size: 25,
-                          ),
-                          const SizedBox(width: 5,),
-                          Text(
-                            post!.likesCount.toString(),
-                            style: const TextStyle(
-                              fontSize: 20
-                            ),
-                          )
-                        ],
+                      LikeButton(
+                        count: post!.likesCount!,
+                        isLiked: post!.isLiked,
+                        onTap: likeOrUnlike,
                       ),
                       Row(
                         children: [
@@ -170,13 +150,13 @@ class _PostPageState extends State<PostPage> {
                       )
                         ],
                       ),
-                      SizedBox(height: deviceSize.height * 0.02,),
+                      const SizedBox(height: 20),
                     ],
                   ),
                 ),
               );
           } else {
-            return const CircularProgressIndicator(); 
+            return const Text("Error loading post");
           }
         }
       ),

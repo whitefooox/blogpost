@@ -10,7 +10,7 @@ class PostsList extends StatelessWidget {
   PostsList({
     super.key,
     required this.posts,
-    required this.onTap
+    required this.onTap,
   });
 
   @override

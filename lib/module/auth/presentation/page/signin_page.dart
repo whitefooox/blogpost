@@ -33,6 +33,7 @@ class SignInPage extends StatelessWidget {
           ScaffoldMessenger.of(context)
               .showSnackBar(LoadingSnackBars.errorSnackBar(state.message));
         } else if(state is AuthAuthorizedState) {
+          ScaffoldMessenger.of(context).hideCurrentSnackBar();
           Navigator.pushReplacementNamed(context, "/create_lock");
         }
       },
