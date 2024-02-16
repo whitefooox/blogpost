@@ -36,7 +36,7 @@ class PostsList extends StatelessWidget {
     );
     } else {
       return const Text(
-              "No posts"
+        "No posts"
       );
     }
   }

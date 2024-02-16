@@ -12,4 +12,9 @@ class CommentInteractor {
     log("comment interactor, get comments postId: $postId");
     return _commentService.getComments(postId);
   }
+
+  Future<void> addComment(String postId, String text) async {
+    log("comment interactor, add comment postId: $postId");
+    return _commentService.addComment(postId, text);
+  }
 }

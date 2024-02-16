@@ -1,6 +1,11 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
+
+import 'package:blogpost/module/post/domain/entity/comment.dart';
+
 class Post {
   final String id;
   final String title;
@@ -10,7 +15,7 @@ class Post {
   final String? authorAvatar;
   final DateTime? createdAt;
   final int? likesCount;
-  final bool? isLiked; //поставлен лайк или нет
+  final bool? isLiked;
   final bool? isPublished;
   final int? commentsCount;
   final String? content;
@@ -67,7 +72,7 @@ class Post {
       'authorId': authorId,
       'authorName': authorName,
       'authorAvatar': authorAvatar,
-      'createdAt': createdAt!.millisecondsSinceEpoch,
+      'createdAt': createdAt?.millisecondsSinceEpoch,
       'likesCount': likesCount,
       'isLiked': isLiked,
       'isPublished': isPublished,
@@ -81,14 +86,14 @@ class Post {
       id: map['id'] as String,
       title: map['title'] as String,
       imageUrl: map['imageUrl'] as String,
-      authorId: map['authorId'] as String,
+      authorId: map['authorId'] != null ? map['authorId'] as String : null,
       authorName: map['authorName'] != null ? map['authorName'] as String : null,
       authorAvatar: map['authorAvatar'] != null ? map['authorAvatar'] as String : null,
-      createdAt: DateTime.fromMillisecondsSinceEpoch(map['createdAt'] as int),
-      likesCount: map['likesCount'] as int,
-      isLiked: map['isLiked'] as bool,
-      isPublished: map['isPublished'] as bool,
-      commentsCount: map['commentsCount'] as int,
+      createdAt: map['createdAt'] != null ? DateTime.fromMillisecondsSinceEpoch(map['createdAt'] as int) : null,
+      likesCount: map['likesCount'] != null ? map['likesCount'] as int : null,
+      isLiked: map['isLiked'] != null ? map['isLiked'] as bool : null,
+      isPublished: map['isPublished'] != null ? map['isPublished'] as bool : null,
+      commentsCount: map['commentsCount'] != null ? map['commentsCount'] as int : null,
       content: map['content'] != null ? map['content'] as String : null,
     );
   }

@@ -34,6 +34,10 @@ class _SettingsPageState extends State<SettingsPage> {
     Navigator.pushNamed(context, "/profile");
   }
 
+  void goToNotifications(){
+    Navigator.pushNamed(context, "/notification");
+  }
+
   void logout(){
     authBloc.add(AuthSignOutEvent());
     lockBloc.add(AppLockResetSettingsEvent());
@@ -73,7 +77,7 @@ class _SettingsPageState extends State<SettingsPage> {
                     SizedBox(
                       height: 60,
                       child: BwButton(
-                          onPressed: (){}, 
+                          onPressed: goToNotifications, 
                           text: "Notifications"
                         ),
                     ),

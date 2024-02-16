@@ -28,7 +28,7 @@ class CommentTile extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  "${comment.name} ${comment.surname}"
+                  "${comment.name ?? "<No name>"} ${comment.surname ?? "<No surname>"}"
                 ),
                 Text(formatter.format(comment.createdAt))
               ],

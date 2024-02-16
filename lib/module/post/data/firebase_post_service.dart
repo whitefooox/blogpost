@@ -20,6 +20,7 @@ class FirebasePostService implements IPostService {
 
   final String namePostCollection = 'posts';
   final String nameUsersCollection = 'users';
+  final String nameCommentsCollection = 'comments';
 
   Future<String> _uploadImage(File file) async {
     final destination = 'files/${uuid.v1() + file.path}';
@@ -57,7 +58,6 @@ class FirebasePostService implements IPostService {
       log(e.toString());
       return null;
     }
-    
   }
 
   Future<domain.User> _getOtherUser(String userId) async {
@@ -83,21 +83,15 @@ class FirebasePostService implements IPostService {
   }
 
   @override
-  Future<void> editPost(Post post) {
-    // TODO: implement editPost
-    throw UnimplementedError();
-  }
-
-  @override
   Future<List<Post>> getAll() async {
     try {
       final user = await _getUser();
       final querySnapshot = await _firebaseFirestore.collection(namePostCollection).where('isPublished', isEqualTo: true).get();
-      final posts = querySnapshot.docs.map((doc)  {
+      final posts = querySnapshot.docs.map((doc) async {
         final data = doc.data();
         String id = doc.reference.id;
         List<String> likes = List<String>.from(data['likes']);
-        List<String> comments = List<String>.from(data['comments']);
+        final querySnapshotComments = await _firebaseFirestore.collection(nameCommentsCollection).where('postId', isEqualTo: id).get();
         return Post(
           id: id, 
           title: data['title'], 
@@ -106,55 +100,58 @@ class FirebasePostService implements IPostService {
           createdAt: (data['createdAt'] as Timestamp).toDate(),
           isLiked: user != null ? likes.contains(user.id!) : null, 
           likesCount: likes.length, 
-          commentsCount: comments.length
+          commentsCount: querySnapshotComments.docs.length
         );
       }).toList();
+      List<Post> resultPosts = [];
       for (var i = 0; i < posts.length; i++) {
-        final otherUser = await _getOtherUser(posts[i].authorId!);
-        posts[i] = posts[i].copyWith(
+        final post = await posts[i];
+        final otherUser = await _getOtherUser(post.authorId!);
+        resultPosts.add(post.copyWith(
           authorName: otherUser.name, 
           authorAvatar: otherUser.avatarImage,
-        );
+        ));
       }
-      return posts;
+      return resultPosts;
     } catch (e) {
       log(e.toString());
       rethrow;
     }
   }
-
+  
   @override
   Future<List<Post>> getMyPosts() async {
     try {
       final user = await _getUser();
       final querySnapshot = await _firebaseFirestore.collection(namePostCollection).where('authorId', isEqualTo: user!.id).get();
-      final posts = querySnapshot.docs.map((doc)  {
+      final posts = querySnapshot.docs.map((doc) async {
         final data = doc.data();
         String id = doc.reference.id;
         List<String> likes = List<String>.from(data['likes']);
-        List<String> comments = List<String>.from(data['comments']);
+        final querySnapshotComments = await _firebaseFirestore.collection(nameCommentsCollection).where('postId', isEqualTo: id).get();
         return Post(
           id: id, 
           title: data['title'], 
           imageUrl: data['imageUrl'], 
           authorId: data['authorId'], 
           createdAt: (data['createdAt'] as Timestamp).toDate(),
-          isLiked: likes.contains(user.id!), 
+          isLiked: user != null ? likes.contains(user.id!) : null, 
           likesCount: likes.length, 
-          isPublished: data['isPublished'],
-          commentsCount: comments.length
+          commentsCount: querySnapshotComments.docs.length
         );
       }).toList();
+      List<Post> resultPosts = [];
       for (var i = 0; i < posts.length; i++) {
-        final otherUser = await _getOtherUser(posts[i].authorId!);
-        posts[i] = posts[i].copyWith(
+        final post = await posts[i];
+        final otherUser = await _getOtherUser(post.authorId!);
+        resultPosts.add(post.copyWith(
           authorName: otherUser.name, 
           authorAvatar: otherUser.avatarImage,
-        );
+        ));
       }
-      return posts;
+      return resultPosts;
     } catch (e) {
-      log("firebase log: $e");
+      log(e.toString());
       rethrow;
     }
   }
@@ -166,7 +163,7 @@ class FirebasePostService implements IPostService {
       final querySnapshot = await _firebaseFirestore.collection(namePostCollection).doc(id).get();
       final data = querySnapshot.data()!;
       List<String> likes = List<String>.from(data['likes']);
-      List<String> comments = List<String>.from(data['comments']);
+      final querySnapshotComments = await _firebaseFirestore.collection(nameCommentsCollection).where('postId', isEqualTo: id).get();
       return Post(
         id: id, 
         title: data['title'], 
@@ -175,7 +172,7 @@ class FirebasePostService implements IPostService {
         createdAt: (data['createdAt'] as Timestamp).toDate(), 
         likesCount: likes.length, 
         isLiked: user != null ? likes.contains(user.id!) : null,
-        commentsCount: comments.length,
+        commentsCount: querySnapshotComments.docs.length,
         content: data['content'],
         isPublished: data['isPublished']
       );

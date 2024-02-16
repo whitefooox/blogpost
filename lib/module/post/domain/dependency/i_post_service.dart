@@ -20,7 +20,6 @@ abstract class IPostService {
     File? image
   ); //обновить пост
   Future<void> deletePost(String postId); //удалить пост
-  Future<void> editPost(Post post); //редактировать пост
   Future<void> likePost(String postId); //лайк поста
   Future<void> unlikePost(String postId); //убрать лайк с поста
 }
