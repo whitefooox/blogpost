@@ -2,7 +2,6 @@
 part of 'edit_post_bloc.dart';
 
 class EditPostState {
-  //final Post? post;
   final String postId;
   final String title;
   final String content;

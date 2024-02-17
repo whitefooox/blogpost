@@ -1,6 +1,4 @@
 import 'dart:developer';
-
-import 'package:blogpost/core/exception/app_exception.dart';
 import 'package:blogpost/module/post/domain/dependency/i_comment_service.dart';
 import 'package:blogpost/module/post/domain/entity/comment.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';

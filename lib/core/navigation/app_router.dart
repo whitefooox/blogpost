@@ -4,6 +4,8 @@ import 'package:blogpost/module/auth/presentation/state/bloc/auth_bloc.dart';
 import 'package:blogpost/module/entry/presentation/page/create_lock_page.dart';
 import 'package:blogpost/module/entry/presentation/page/enter_lock_page.dart';
 import 'package:blogpost/module/entry/presentation/state/bloc/app_lock_bloc.dart';
+import 'package:blogpost/module/notification/domain/interactor/notification_interactor.dart';
+import 'package:blogpost/module/notification/presentation/state/bloc/notification_settings_bloc.dart';
 import 'package:blogpost/module/post/domain/interactor/comment_interactor.dart';
 import 'package:blogpost/module/post/domain/interactor/post_interactor.dart';
 import 'package:blogpost/module/post/presentation/page/blog_post_page.dart';
@@ -13,8 +15,8 @@ import 'package:blogpost/module/post/presentation/page/edit_post_page.dart';
 import 'package:blogpost/module/post/presentation/page/post_page.dart';
 import 'package:blogpost/module/post/presentation/state/comment/bloc/comments_bloc.dart';
 import 'package:blogpost/module/post/presentation/state/edit/bloc/edit_post_bloc.dart';
-import 'package:blogpost/module/settings/presentation/page/notification_page.dart';
-import 'package:blogpost/module/settings/presentation/page/settings_page.dart';
+import 'package:blogpost/module/notification/presentation/page/notification_page.dart';
+import 'package:blogpost/module/settings/settings_page.dart';
 import 'package:blogpost/module/user/domain/interactor/user_interactor.dart';
 import 'package:blogpost/module/user/presentation/page/profile_page.dart';
 import 'package:flutter/material.dart';
@@ -28,10 +30,10 @@ class AppRouter {
   final _postInteractor = GetIt.instance.get<PostInteractor>();
   final _commentInteractor = GetIt.instance.get<CommentInteractor>();
   final _userInteractor = GetIt.instance.get<UserInteractor>();
+  final _notificationInteractor = GetIt.instance.get<NotificationInteractor>();
 
   final _authBloc = GetIt.instance.get<AuthBloc>()..add(AuthAppLoadedEvent());
-  final _lockBloc = GetIt.instance.get<AppLockBloc>()
-    ..add(AppLockAppLoadedEvent());
+  final _lockBloc = GetIt.instance.get<AppLockBloc>()..add(AppLockAppLoadedEvent());
 
   Route? onGenerateRoute(RouteSettings settings) {
     switch (settings.name) {
@@ -64,14 +66,13 @@ class AppRouter {
       case "/posts":
         return MaterialPageRoute(
             builder: (_) => MultiBlocProvider(
-                  providers: [
-                    BlocProvider.value(value: _authBloc),
-                  ],
-                  child: BlogPostPage(
-                    postInteractor: _postInteractor,
-                    isAuthorized: _authBloc.state is AuthAuthorizedState,
-                  ),
-                ));
+              providers: [
+                BlocProvider.value(value: _authBloc),
+              ],
+              child: BlogPostPage(
+                postInteractor: _postInteractor,
+              ),
+            ));
       case "/create_lock":
         return MaterialPageRoute(builder: (_) => const CreateLockPage());
       case "/enter_lock":
@@ -79,20 +80,20 @@ class AppRouter {
       case "/settings":
         return MaterialPageRoute(
             builder: (_) => MultiBlocProvider(
-                  providers: [
-                    BlocProvider.value(value: _authBloc),
-                    BlocProvider.value(value: _lockBloc),
-                  ],
-                  child: SettingsPage(
-                    userInteractor: _userInteractor,
-                  ),
-                ));
+            providers: [
+              BlocProvider.value(value: _authBloc),
+              BlocProvider.value(value: _lockBloc),
+            ],
+            child: SettingsPage(
+              userInteractor: _userInteractor,
+            ),
+          ));
       case "/create_post":
         {
           return MaterialPageRoute(
-              builder: (_) => CreatePostPage(
-                    postInteractor: _postInteractor,
-                  ));
+            builder: (_) => CreatePostPage(
+            postInteractor: _postInteractor,
+          ));
         }
       case "/edit_post":
         {
@@ -116,7 +117,6 @@ class AppRouter {
               builder: (_) => PostPage(
                 postId: postId,
                 postInteractor: _postInteractor,
-                isAuthorized: _authBloc.state is AuthAuthorizedState,
               ),
             );
           } else {
@@ -148,15 +148,18 @@ class AppRouter {
       case "/profile":
         {
           return MaterialPageRoute(
-              builder: (_) => ProfilePage(
-                    userInteractor: _userInteractor,
-                  ));
+            builder: (_) => ProfilePage(
+            userInteractor: _userInteractor,
+          ));
         }
       case "/notification":
         {
           return MaterialPageRoute(
-              builder: (_) => NotificationPage());
-      }
+              builder: (_) => BlocProvider(
+              create: (context) => NotificationSettingsBloc(_notificationInteractor)..add(NotificationSettingsLoadEvent()),
+              child: const NotificationPage(),
+          ));
+        }
       default:
         return null;
     }

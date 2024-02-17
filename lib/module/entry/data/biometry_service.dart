@@ -11,7 +11,7 @@ class BiometryService implements IBiometryService {
     try {
       return await auth.canCheckBiometrics;
     } catch (e) {
-      log("Error in [biometry service][checkAvailableFingerprint]");
+      log(e.toString());
       return false;
     }
   }
@@ -27,6 +27,7 @@ class BiometryService implements IBiometryService {
         ),
       );
     } catch (e) {
+      log(e.toString());
       return false;
     }
   }

@@ -7,14 +7,12 @@ import 'package:flutter/material.dart';
 
 class PostPage extends StatefulWidget {
   final String postId;
-  final bool isAuthorized;
   final PostInteractor postInteractor;
 
   const PostPage({
     super.key, 
     required this.postId,
     required this.postInteractor,
-    required this.isAuthorized
   });
 
   @override

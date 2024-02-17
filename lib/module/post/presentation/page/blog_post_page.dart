@@ -1,20 +1,20 @@
 import 'package:blogpost/core/enum/loading_status.dart';
 import 'package:blogpost/core/widget/bw_icon_button.dart';
+import 'package:blogpost/module/auth/presentation/state/bloc/auth_bloc.dart';
 import 'package:blogpost/module/post/domain/entity/post.dart';
 import 'package:blogpost/module/post/domain/interactor/post_interactor.dart';
 import 'package:blogpost/module/post/presentation/widget/bw_tab_bar.dart';
 import 'package:blogpost/module/post/presentation/widget/posts_list.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class BlogPostPage extends StatefulWidget {
 
   final PostInteractor postInteractor;
-  final bool isAuthorized;
 
   const BlogPostPage({
     super.key,
     required this.postInteractor,
-    required this.isAuthorized
   });
 
   @override
@@ -24,6 +24,7 @@ class BlogPostPage extends StatefulWidget {
 class _BlogPostPageState extends State<BlogPostPage>
     with TickerProviderStateMixin {
 
+  late bool isAuthorized;
   late TabController _tabController;
 
   LoadingStatus allPostsStatus = LoadingStatus.loading;
@@ -71,7 +72,7 @@ class _BlogPostPageState extends State<BlogPostPage>
   }
 
   void onQueryChanged(String query){
-    if(widget.isAuthorized){
+    if(isAuthorized){
       if(_tabController.index == 0){
         if(query.isNotEmpty){
           setState(() {
@@ -113,9 +114,10 @@ class _BlogPostPageState extends State<BlogPostPage>
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: widget.isAuthorized ? 2 : 1, vsync: this);
+    isAuthorized = BlocProvider.of<AuthBloc>(context).state is AuthAuthorizedState;
+    _tabController = TabController(length: isAuthorized ? 2 : 1, vsync: this);
     fetchAllPosts();
-    if(widget.isAuthorized){
+    if(isAuthorized){
       fetchMyPosts();
     }
   }
@@ -124,7 +126,7 @@ class _BlogPostPageState extends State<BlogPostPage>
   Widget build(BuildContext context) {
 
     return Scaffold(
-      floatingActionButton: widget.isAuthorized
+      floatingActionButton: isAuthorized
           ? BwIconButton(
               iconData: Icons.add,
               onPressed: () {
@@ -133,15 +135,23 @@ class _BlogPostPageState extends State<BlogPostPage>
             )
           : null,
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         title: const Text("BlogPost"),
-        actions: widget.isAuthorized ?[
+        actions: isAuthorized ?[
           IconButton(
             onPressed: () {
               Navigator.pushNamed(context, "/settings");
             },
             icon: const Icon(Icons.settings),
           ),
-        ] : null,
+        ] : [
+          IconButton(
+            onPressed: () {
+              Navigator.pushNamed(context, "/signin");
+            },
+            icon: const Icon(Icons.exit_to_app),
+          ),
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.only(left: 15, right: 15),
@@ -166,7 +176,7 @@ class _BlogPostPageState extends State<BlogPostPage>
             BWTabBar(
                 tabController: _tabController,
                 options:
-                    widget.isAuthorized ? ["My posts", "All posts"] : ["All posts"]
+                    isAuthorized ? ["My posts", "All posts"] : ["All posts"]
                     ),
             const SizedBox(
               height: 10,
@@ -175,7 +185,7 @@ class _BlogPostPageState extends State<BlogPostPage>
               child: TabBarView(
                 controller: _tabController,
                   children: [
-                    if(widget.isAuthorized)
+                    if(isAuthorized)
                     LayoutBuilder(
                       builder: (context, constraints) => RefreshIndicator(
                         color: Colors.black,

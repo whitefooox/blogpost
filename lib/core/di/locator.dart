@@ -10,6 +10,11 @@ import 'package:blogpost/module/entry/domain/dependency/i_biometry_service.dart'
 import 'package:blogpost/module/entry/domain/dependency/i_pin_repository.dart';
 import 'package:blogpost/module/entry/domain/interactor/lock_interactor.dart';
 import 'package:blogpost/module/entry/presentation/state/bloc/app_lock_bloc.dart';
+import 'package:blogpost/module/notification/data/firebase_notification_service.dart';
+import 'package:blogpost/module/notification/data/notification_storage.dart';
+import 'package:blogpost/module/notification/domain/dependency/i_notification_service.dart';
+import 'package:blogpost/module/notification/domain/dependency/i_notification_storage.dart';
+import 'package:blogpost/module/notification/domain/interactor/notification_interactor.dart';
 import 'package:blogpost/module/post/data/firebase_comment_service.dart';
 import 'package:blogpost/module/post/data/firebase_post_service.dart';
 import 'package:blogpost/module/post/domain/dependency/i_comment_service.dart';
@@ -54,9 +59,16 @@ void injectPostsModule(){
   final commentInteractor = getIt.registerSingleton<CommentInteractor>(CommentInteractor(commentService));
 }
 
+void injectNotificationModule(){
+  final notificationService = getIt.registerSingleton<INotificationService>(FirebaseNotificationService());
+  final notificationStorage = getIt.registerSingleton<INotificationStorage>(NotificationStorage(sharedPreferences));
+  final notificationInteractor = getIt.registerSingleton<NotificationInteractor>(NotificationInteractor(notificationService, notificationStorage));
+}
+
 Future<void> setupLocator() async {
   await injectLocalData();
   injectAuthModule();
   injectEntryModule();
   injectPostsModule();
+  injectNotificationModule();
 }

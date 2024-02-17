@@ -24,12 +24,10 @@ class _CreateLockPageState extends State<CreateLockPage> {
   var firstPin = '';
   var secondPin = '';
   bool isSettingSecondPin = false;
-  late Future<bool> isAvailableBiometry;
 
   @override
   void initState() {
     super.initState();
-    //isAvailableBiometry = lockInteractor.checkAvailableFingerprint();
   }
 
   void enterNumber(int number){
@@ -59,7 +57,7 @@ class _CreateLockPageState extends State<CreateLockPage> {
     lockInteractor.enablePin(firstPin);
     final enableBiometry = _showUseBiometryDialog();
     if(await enableBiometry) lockInteractor.enableFingerprint();
-    Navigator.pushReplacementNamed(context, "/posts");
+    if(mounted) Navigator.pushReplacementNamed(context, "/posts");
   }
 
   void deleteLastNumber(){

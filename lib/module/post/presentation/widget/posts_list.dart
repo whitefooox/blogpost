@@ -5,9 +5,9 @@ import 'package:flutter/material.dart';
 class PostsList extends StatelessWidget {
 
   final List<Post> posts;
-  void Function(Post post) onTap;
+  final void Function(Post post) onTap;
 
-  PostsList({
+  const PostsList({
     super.key,
     required this.posts,
     required this.onTap,

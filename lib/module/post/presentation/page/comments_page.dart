@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:blogpost/core/enum/loading_status.dart';
 import 'package:blogpost/core/widget/loading_snackbar.dart';
 import 'package:blogpost/module/auth/presentation/state/bloc/auth_bloc.dart';

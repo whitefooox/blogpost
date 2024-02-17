@@ -51,7 +51,6 @@ class FirebasePostService implements IPostService {
       final snapshot = await _firebaseFirestore.collection(nameUsersCollection).doc(_firebaseAuth.currentUser!.uid).get();
       if(snapshot.exists){
         user = domain.User.fromMap(snapshot.data()!);
-        log(snapshot.data()!.toString());
       }
       return user;
     } catch (e) {
