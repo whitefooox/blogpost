@@ -1,16 +1,37 @@
+![alt text](./assets/images/post_logo.png)
 # blogpost
 
-A new Flutter project.
+Mobile application for blogging
 
-## Getting Started
+## stack
+* dart
+* flutter
+* bloc (state)
+* get_it (dependency injection)
+* local_auth (biometric entry)
+* firebase/core/auth/firestore/storage/messaging (data layer and notifications)
+* image_picker (upload image)
+* uuid (for uniqueness in storage)
 
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## architectures
+* core (common components for the entire application)
+* modules (main functional parts)
+  + auth
+  + entry
+  + notification
+  + post
+  + user
+ 
+## preview
+![alt text](./preview/signin.png)
+![alt text](./preview/signup.png)
+![alt text](./preview/create_lock.png)
+![alt text](./preview/biometry_auth.png)
+![alt text](./preview/without_account.png)
+![alt text](./preview/my_posts.png)
+![alt text](./preview/all_posts.png)
+![alt text](./preview/create_post.png)
+![alt text](./preview/edit_post.png)
+![alt text](./preview/settings.png)
+![alt text](./preview/profile.png)
+![alt text](./preview/notifications.png)
