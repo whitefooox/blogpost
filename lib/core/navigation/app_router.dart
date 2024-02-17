@@ -16,7 +16,7 @@ import 'package:blogpost/module/post/presentation/page/post_page.dart';
 import 'package:blogpost/module/post/presentation/state/comment/bloc/comments_bloc.dart';
 import 'package:blogpost/module/post/presentation/state/edit/bloc/edit_post_bloc.dart';
 import 'package:blogpost/module/notification/presentation/page/notification_page.dart';
-import 'package:blogpost/module/settings/settings_page.dart';
+import 'package:blogpost/core/settings/settings_page.dart';
 import 'package:blogpost/module/user/domain/interactor/user_interactor.dart';
 import 'package:blogpost/module/user/presentation/page/profile_page.dart';
 import 'package:flutter/material.dart';
