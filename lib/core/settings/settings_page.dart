@@ -101,6 +101,16 @@ class _SettingsPageState extends State<SettingsPage> {
                           text: "Exit"
                         ),
                     ),
+                    const SizedBox(
+                      height: 25,
+                    ),
+                    const Text(
+                      "version 1.0.0",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 16
+                      ),
+                    )
                   ],
                 ),
               ),
