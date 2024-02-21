@@ -4,12 +4,12 @@ import 'package:blogpost/module/entry/domain/dependency/i_biometry_service.dart'
 import 'package:local_auth/local_auth.dart';
 
 class BiometryService implements IBiometryService {
-  final LocalAuthentication auth = LocalAuthentication();
+  final LocalAuthentication _auth = LocalAuthentication();
 
   @override
   Future<bool> checkAvailableFingerprint() async {
     try {
-      return await auth.canCheckBiometrics;
+      return await _auth.canCheckBiometrics;
     } catch (e) {
       log(e.toString());
       return false;
@@ -19,7 +19,7 @@ class BiometryService implements IBiometryService {
   @override
   Future<bool> authenticateWithFingerprint() async {
     try {
-      return await auth.authenticate(
+      return await _auth.authenticate(
         localizedReason: 'Log in to the application',
         options: const AuthenticationOptions(
           stickyAuth: true,

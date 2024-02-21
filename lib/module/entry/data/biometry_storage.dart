@@ -3,22 +3,22 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class BiometryStorage implements IBiometryRepository {
   final SharedPreferences _prefs; 
-  String biometryKey = "useBiometry";
+  final String _biometryKey = "useBiometry";
 
   BiometryStorage(this._prefs);
   
   @override
   void deleteUseBiometry() async {
-    await _prefs.remove(biometryKey);
+    await _prefs.remove(_biometryKey);
   }
   
   @override
   bool hasUseBiometry() {
-    return _prefs.containsKey(biometryKey);
+    return _prefs.containsKey(_biometryKey);
   }
   
   @override
   void saveUseBiometry() async {
-    await _prefs.setBool(biometryKey, true);
+    await _prefs.setBool(_biometryKey, true);
   }
 }

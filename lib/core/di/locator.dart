@@ -47,7 +47,10 @@ void injectEntryModule(){
   final pinStorage = getIt.registerSingleton<IPinRepository>(PinStorage(sharedPreferences));
   final biometryService = getIt.registerSingleton<IBiometryService>(BiometryService());
   final biometryStorage = getIt.registerSingleton<IBiometryRepository>(BiometryStorage(sharedPreferences));
-  final lockInteractor = getIt.registerSingleton<LockInteractor>(LockInteractor(pinStorage, biometryService, biometryStorage));
+  final lockInteractor = getIt.registerSingleton<LockInteractor>(LockInteractor(
+    pinStorage, 
+    biometryService, 
+    biometryStorage));
   getIt.registerSingleton<AppLockBloc>(AppLockBloc());
 }
 

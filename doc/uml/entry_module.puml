@@ -1,0 +1,75 @@
+@startuml
+
+package "Data layer" #DDDDDD {
+
+class BiometryService {
+    - LocalAuthentication _auth
+    + Future<bool> checkAvailableFingerprint()
+    + Future<bool> authenticateWithFingerprint()
+}
+
+class BiometryStorage {
+    - SharedPreferences _prefs
+    - String _biometryKey
+    + void saveUseBiometry()
+    + void deleteUseBiometry()
+    + bool hasUseBiometry()
+}
+
+class PinStorage {
+    - SharedPreferences _prefs
+    - String _pinKey
+    + bool hasPin()
+    + void savePin(String pin)
+    + void deletePin()
+    + String? getPin()
+}
+
+}
+
+package "Domain layer" #DDDDDD {
+
+    interface IBiometryRepository {
+        {abstract} void saveUseBiometry()
+        {abstract} void deleteUseBiometry()
+        {abstract} bool hasUseBiometry()
+    }
+
+    interface IBiometryService {
+        {abstract} Future<bool> checkAvailableFingerprint()
+        {abstract} Future<bool> authenticateWithFingerprint()
+    }
+
+    interface IPinRepository {
+        {abstract} bool hasPin()
+        {abstract} void savePin(String pin)
+        {abstract} void deletePin()
+        {abstract} String? getPin()
+    }
+
+    class LockInteractor {
+        - IPinRepository _pinRepository
+        - IBiometryService _biometryService
+        - IBiometryRepository _biometryRepository
+        + void enablePin(String pin)
+        + void disablePin()
+        + bool authenticateWithPin(String pin)
+        + bool hasPin()
+        + void enableFingerprint()
+        + void disableFingerprint()
+        + Future<bool> authenticateWithFingerprint()
+        + bool hasFingerprint()
+        + Future<bool> checkAvailableFingerprint()
+    }
+}
+
+IBiometryRepository <|.. BiometryStorage
+
+IBiometryService <|.. BiometryService
+
+IPinRepository <|.. PinStorage
+
+IPinRepository <-up.	LockInteractor
+IBiometryService <-up. LockInteractor
+IBiometryRepository <-up.	LockInteractor
+@enduml
